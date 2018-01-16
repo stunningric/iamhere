@@ -1,5 +1,28 @@
-**PHPINFO**
+**Check MySQL Connection with PHP**
+```
+<?php
+$servername = "IP OR DOMAIN NAME";
+$username = "username";
+$password = "password";
 
+
+// Create connection
+$conn = new mysqli($servername, $username, $password);
+
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+echo "Connected successfully";
+?> 
+```
+**Kill remote SSH user**
+```
+pkill -9 -t pts/0 
+pkill -9 -t "tty id" you can find tty id with "w" command or "tty" to find your ssh session tty id  
+```
+**PHPINFO**
 ```
 <?php
 echo "<br>";
