@@ -28,7 +28,7 @@ sudo find media/ -type d -exec chmod 700 {} \;
 			"Resource": "arn:aws:s3:::dblogs.domainname.com/*",
 			"Condition": {
 				"NotIpAddress": {
-					"aws:SourceIp": ["52.3.127.56/32", "202.131.107.130/32"]
+					"aws:SourceIp": ["192.168.0.12/32", "192.168.0.122/32"]
 				}
 			}
 		}
