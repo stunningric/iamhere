@@ -1,3 +1,9 @@
+**MySQL Backup only schema and data**
+```
+mysqldump -u root -p --no-create-info dbname tablename1 tablename2 > data.sql     ------------ only DATA
+
+mysqldump -u root -p --no-data dbname tablename1 tablename2 > schema.sql   ------------ only SCHEME
+```
 **PM2 Commands**
 ```
 pm2 start python.py -n "Python"						#python olery_service.py
