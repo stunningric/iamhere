@@ -1,15 +1,13 @@
 #Help
 
-<code><?php
-echo "<br>";
-echo "Website URL :- ";
-echo  $_SERVER['HTTP_HOST'];
-echo "<br>";
-
-
-echo "<br>";
-echo "Website DocumentRoot :- ";
-echo $_SERVER['DOCUMENT_ROOT'];
-echo "<br>";
-phpinfo();
-?></code>
+<code><?php</code>
+<code>echo "<br>";</code>
+<code>echo "Website URL :- ";</code>
+<code>echo  $_SERVER['HTTP_HOST'];</code>
+<code>echo "<br>";</code>
+<code>echo "<br>";</code>
+<code>echo "Website DocumentRoot :- ";</code>
+<code>echo $_SERVER['DOCUMENT_ROOT'];</code>
+<code>echo "<br>";</code>
+<code>phpinfo();</code>
+<code>?></code>
