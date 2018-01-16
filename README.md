@@ -1,3 +1,73 @@
+**Apache Installation with basic configuration**
+```
+-----------------------------------------BASH SCRIPT FOR INSTALLATION------------------------------------
+#!/bin/bash
+#sudo apt-get update
+sudo apt-get install apache2 -y
+sudo apt-get install php5 libapache2-mod-php5 php5-mcrypt php5-mysql php-pear php5-gd php5-curl php5-cgi php5-cli php5-common php5-json php5-memcache php5-memcached -y
+sudo apt-get install sendmail
+a2enmod rewrite
+a2enmod headers
+a2enmod expires
+/etc/init.d/apache2 restart
+touch /var/www/html/phpinfo.php
+echo "<?php phpinfo(); ?>" > /var/www/html/phpinfo.php
+echo "Installation completed Check phpinfo with http://localhost/phpinfo.php"
+
+-------------------------------------------Config--------------------------------------------------------
+ServerAdmin webmaster@localhost
+	DocumentRoot /home/ubuntu/deploy
+        <Directory />
+        Options FollowSymLinks
+        AllowOverride All
+        Require all granted	
+        </Directory>
+
+-------------------------------------------Apache 7 Installation ------------------------------------------
+sudo apt-get install -y apache2
+sudo apt-get install -y php7.0 libapache2-mod-php7.0 php7.0-mysql php7.0-curl php7.0-gd php7.0-intl php-pear php-imagick php7.0-imap php7.0-mcrypt php-memcache php-memcached php7.0-mbstring php-redis
+
+
+ServerAdmin webmaster@localhost
+	DocumentRoot /home/ubuntu/deploy
+        <Directory />
+        Options FollowSymLinks
+        AllowOverride All
+        Require all granted	
+        </Directory>
+
+
+sudo apt-get install apache2 libapache2-mod-php7.0 php7.0-cli php7.0-common php7.0-curl php7.0-gd php7.0-json php7.0-mcrypt php7.0-mbstring php7.0-mysql php7.0-xml php7.0-xmlrpc php7.0-zip php-apcu php-mongodb php-memcache php-memcached php-redis
+sudo a2enmod headers expires rewrite vhost_alias
+
+
+
+
+<VirtualHost *:80>
+	# The ServerName directive sets the request scheme, hostname and port that
+	# the server uses to identify itself. This is used when creating
+	# redirection URLs. In the context of virtual hosts, the ServerName
+	# specifies what hostname must appear in the request's Host: header to
+	# match this virtual host. For the default virtual host (this file) this
+	# value is not decisive as it is used as a last resort host regardless.
+	# However, you must set it for any further virtual host explicitly.
+	#ServerName www.example.com
+	UseCanonicalName Off
+
+	ServerAdmin webmaster@localhost
+	VirtualDocumentRoot /home/ubuntu/deploy/%1/public
+        <Directory /home/ubuntu/deploy/>
+        Options FollowSymLinks
+        AllowOverride All
+        Require all granted	
+        </Directory>
+
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+```
 **MySQL backup and upload to S3 Bucket**
 ```
 #!bin/bash
