@@ -1,3 +1,40 @@
+**tar exclude command**
+```
+tar -zcv --exclude='file1' --exclude='patter*' --exclude='file2' -f /backup/filename.tgz .	
+
+
+tar -zcvf filename.tar.gz foldername --exclude="cache" --exclude="capcha" --exclude="css" --exclude="css_secure" --exclude="js" --exclude="tmp"  --exclude="catalog/product/cache"
+```
+**Magento Permission**
+```
+sudo find var/ -type f -exec chmod 600 {} \; 
+sudo find media/ -type f -exec chmod 600 {} \;
+sudo find var/ -type d -exec chmod 700 {} \; 
+sudo find media/ -type d -exec chmod 700 {} \;
+```
+**S3 Bucket Allowed 2 IP**
+```
+{
+	"Version": "2008-10-17",
+	"Id": "S3PolicyId1",
+	"Statement": [
+		{
+			"Sid": "IPDeny",
+			"Effect": "Deny",
+			"Principal": {
+				"AWS": "*"
+			},
+			"Action": "s3:*",
+			"Resource": "arn:aws:s3:::dblogs.domainname.com/*",
+			"Condition": {
+				"NotIpAddress": {
+					"aws:SourceIp": ["52.3.127.56/32", "202.131.107.130/32"]
+				}
+			}
+		}
+	]
+}
+```
 **MongoDB Backup Script**
 ```
 #!/bin/bash
