@@ -1,3 +1,17 @@
+**PM2 Commands**
+```
+pm2 start python.py -n "Python"						#python olery_service.py
+pm2 start npm -n "appname" -- start					#npm start
+pm2 start npm -n "appname" -- start					#npm start
+pm2 start start.sh -n "Bash"						#sh start.sh
+sudo pm2 start http.js -n "proxy" --interpreter=/home/developer/node-v6.10.3/bin/node #sudo node http.js
+
+Once run all application execute "pm2 startup" which gives generate another command to run as below
+
+sudo env PATH=$PATH:/usr/local/bin /usr/local/n/versions/node/6.0.0/lib/node_modules/pm2/bin/pm2 startup systemd -u dev --hp /home/dev --service-name pm2
+
+Once execute the command it will create service pm2, which will restart all app if server restart.
+```
 **MySQL Import CSV with LOAD INFILE**
 ```
 LOAD DATA INFILE 'data.csv' INTO TABLE mytables  FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
