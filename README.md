@@ -1,3 +1,17 @@
+**Check MongoDB connection with PHP**
+```
+<?php
+//$server = "mongodb://username:password@localhost:27017/dbname";
+$server = "mongodb://rakesh:rakesh123@localhost:27017/dbname";
+
+$c = new MongoClient( $server );
+ 
+if($c->connected)
+    echo "Connected successfully";
+else
+    echo "Connection failed";
+ ?>
+ ```
 **Check Mail without Authentication with Sendmail Package**
 ```
 <?php
