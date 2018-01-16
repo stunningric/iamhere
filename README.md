@@ -1,3 +1,32 @@
+**Check DB Size MySQL**
+```
+SELECT table_schemaTABLENAME, sum( data_length + index_length ) / 1024 / 1024 "Data Base Size in MB",sum( data_free )/ 1024 / 1024 "Free Space in MB" FROM information_schema.TABLES GROUP BY table_schema ;
+```
+**Setup SSL Certificate in Apache**
+```
+<VirtualHost *:443>
+        ServerName www.domainname.com
+        DocumentRoot /home/ubuntu/deploy
+        <Directory />
+        Options FollowSymLinks
+        AllowOverride All
+        Require all granted
+        </Directory>
+ErrorLog ${APACHE_LOG_DIR}/error_ssl.log
+CustomLog ${APACHE_LOG_DIR}/access_ssl.log combined
+SSLEngine on
+SSLCertificateFile /etc/ssl/domainname/domainname.crt
+SSLCertificateKeyFile /etc/ssl/domainname/domainname.key
+SSLCertificateChainFile /etc/ssl/domainname/gd-bundle-ca.crt
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+Header set Access-Control-Allow-Origin "*"
+```
+**Install AWS ELB SSL Certificate**
+```
+aws iam upload-server-certificate --server-certificate-name certificate2017 --certificate-body file://domainname.crt --private-key file://domainname.com.key --certificate-chain file://IntermediateCA.crt --path /cloudfront/certificate/
+```
 **Interactive Mysql create user for existing db**
 ```
 #!/bin/bash
