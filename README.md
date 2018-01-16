@@ -1,1 +1,3 @@
-# iamhere
+#Help
+
+https://www.shellcheck.net/
