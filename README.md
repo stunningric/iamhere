@@ -1,3 +1,165 @@
+**MongoDB Backup Script**
+```
+#!/bin/bash
+#Create Variables.
+FILE="$(date +"%d-%m-%Y-%H")"
+YEAR="$(date +"%Y")"
+MONTH="$(date +"%m")"
+DAY="$(date +"%d")"
+TIMESTAMP=`date +%F-%H%M`
+### System Setup ###
+mkdir -p /home/ubuntu/mongodbbackup
+BACKUP=/home/ubuntu/mongodbbackup
+cd /home/ubuntu/mongodbbackup
+ 
+#Force file syncronization and lock writes
+#mongo admin --eval "printjson(db.fsyncLock())"
+ 
+MONGODUMP_PATH="/usr/bin/mongodump"
+MONGO_HOST="IP or Domainname" #replace with your server ip
+MONGO_PORT="27017"
+MONGO_DATABASE="dbname" #replace with your database name
+ 
+ 
+# Create backup
+$MONGODUMP_PATH -h $MONGO_HOST:$MONGO_PORT -d $MONGO_DATABASE
+ 
+# Add timestamp to backup
+mv dump mongodb-$MONGO_HOST-$TIMESTAMP
+tar zcvf mongodb-$MONGO_HOST-$TIMESTAMP.tar.gz mongodb-$MONGO_HOST-$TIMESTAMP
+
+
+# Backup Data to S3 Bucket
+s3cmd sync -v /home/ubuntu/mongodbbackup/*.tar.gz s3://domainname-mongodb-backup/
+
+
+s3cmd du -H s3://domainname-mongodb-backup/ >> /home/ubuntu/mongodbbackup/mongodb_log$TIMESTAMP.txt
+
+
+# Send Email for the backup done to the owners.
+#mail -s "DYRCT.COM MongoDB Backup" -a /home/ubuntu/mongodbbackup/mongodb_log$TIMESTAMP.txt rchauhan@theitideas.com,second@theitideas.com,third@theitideas.com  << EOF
+#"MongoDB Database backup done and Database files copied to S3 bucket. Please see the attached log file for more details."
+#EOF
+
+
+mail -s "Domainname MongoDB Backup-$TIMESTAMP" rchauhan@theitideas.com,second@theitideas.com  << EOF
+MongoDB Database backup done and Database files copied to S3 bucket below is the total size of backup bucket.
+`cat /home/ubuntu/mongodbbackup/mongodb_log$TIMESTAMP.txt`
+EOF
+
+
+### Delete files older than 3 Days ###
+find /home/ubuntu/mongodbbackup/* -mtime +5 -exec rm -rf {} \;
+
+
+ 
+# Upload to S3
+
+#S3_BUCKET_NAME="dyrct-mongodb-backup" #replace with your bucket name on Amazon S3
+#S3_BUCKET_PATH=""
+
+#s3cmd put mongodb-$HOSTNAME-$TIMESTAMP.tar 
+#s3://$S3_BUCKET_NAME/$S3_BUCKET_PATH/mongodb-$HOSTNAME-$TIMESTAMP.tar
+ 
+#Unlock database writes
+#mongo admin --eval "printjson(db.fsyncUnlock())"
+```
+**MySQL Backup Script**
+```
+#!/bin/bash
+ 
+USER="root"
+PASSWORD="root"
+OUTPUT="/Users/rakesh/dumps"
+ 
+#rm "$OUTPUT/*gz" > /dev/null 2>&1
+ 
+databases=`mysql --user=$USER --password=$PASSWORD -e "SHOW DATABASES;" | tr -d "| " | grep -v Database`
+ 
+for db in $databases; do
+    if [[ "$db" != "information_schema" ]] && [[ "$db" != _* ]] ; then
+        echo "Dumping database: $db"
+        mysqldump --force --opt --user=$USER --password=$PASSWORD --databases $db > $OUTPUT/`date +%Y%m%d`.$db.sql
+        gzip $OUTPUT/`date +%Y%m%d`.$db.sql
+    fi
+done
+```
+**Apache script for check uptime**
+```
+#!/bin/sh
+SERVICE='apache2'
+email=rakesh.chauhan@domainname.com
+time="$(date +"%r")"
+date="$(date +'%d/%m/%Y')"
+
+if ps ax | grep -v grep | grep $SERVICE > /dev/null
+then
+    echo "Apache service running, everything is fine"
+else
+    /etc/init.d/apache2 start  
+    if ps ax | grep -v grep | grep $SERVICE > /dev/null  
+then
+subject="Apache has been started"
+echo "Apache Server has been started @ "$date $time" " | mail -s "$subject" $email
+else
+subject="Apache is not running"
+echo "Apache Server is stopped and cannot be started!!! @ "$date $time" " | mail -s "$subject" $email
+  #  echo "$SERVICE started "
+#    echo "$SERVICE is not running!" | mail -s "$SERVICE down" root
+fi
+fi
+
+```
+**Check MySQL running or not | BASH Script**
+```
+<?php
+$servername = "localhost";
+$username = "username";
+$password = "password";
+
+// Create connection
+conn = new mysqli($servername, $username, $password);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+echo "Connected successfully";
+?>
+```
+**Gitpull Script**
+```
+#!/bin/sh
+time="$(date +"%R")"
+date="$(date +'%d%m%Y')"
+cd /home/ubuntu/deploy
+git checkout master
+git stash
+sleep 1m
+git pull > /home/ubuntu/script/gitlogs/"$date"_"$time"_GIT_Pull.log 2>&1
+
+#Upload images, CSS, JS Files to S3 bucket for Cloudfront serve
+s3cmd sync "/home/ubuntu/deploy/public/js/" "s3://bucketname/js/" --add-header=Cache-Control:max-age=86400
+s3cmd sync "/home/ubuntu/deploy/public/images/" "s3://bucketname/images/" --add-header=Cache-Control:max-age=86400
+s3cmd sync "/home/ubuntu/deploy/public/styles/" "s3://bucketname/styles/" --add-header=Cache-Control:max-age=86400
+s3cmd sync "/home/ubuntu/deploy/public/img/" "s3://bucketname/img/" --add-header=Cache-Control:max-age=86400
+
+# Delete old log files
+cd /home/ubuntu/script/gitlogs/
+find /home/ubuntu/script/gitlogs/* -mtime +10 -exec rm -rf {} \;
+
+------>>>>     Crontab <<<<-------
+
+
+ 
+Set crontab for reboot 
+@reboot sh /home/ubuntu/script/gitpull.sh
+
+```
+**Assign apache group to your user**
+```
+usermod -g www-data ubuntu
+```
 **Find Command**
 ```
 find /var/www/ -size  +512M -exec du -sh {} \;
