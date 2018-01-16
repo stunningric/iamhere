@@ -1,5 +1,262 @@
+**Find Command**
+```
+find /var/www/ -size  +512M -exec du -sh {} \;
+find /var/www/ ! -name "*.jpg" -size +10M -exec du -sh {} \;
+```
+**Tomcat VirtualHOST with JAVA variable**
+```
+</Host>
+         <Host name="www.rakesh.com"  appBase="webapps/rakesh"
+            unpackWARs="true" autoDeploy="true">
+        <Context path="" docBase="/var/lib/tomcat8/webapps/rakesh"/>
+        </Host>
+
+
+
+JAVA_HOME=/usr/local/java/jdk1.8.0_121
+PATH=$PATH:$JRE_HOME/bin:$JAVA_HOME/bin
+export JAVA_HOME
+export PATH
+        
+
+
+        sudo update-alternatives --install "/usr/bin/java" "java" "/usr/local/java/jdk1.8.0_121/bin/java" 1 
+        sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/local/java/jdk1.8.0_121/bin/javac" 1
+        sudo update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/local/java/jdk1.8.0_121/bin/javaws" 1
+        sudo update-alternatives --set java /usr/local/java/jdk1.8.0_121/bin/java 
+        sudo update-alternatives --set javac /usr/local/java/jdk1.8.0_121/bin/javac 
+        sudo update-alternatives --set javaws /usr/local/java/jdk1.8.0_121/bin/javaws 
+
+
+https://www.ntu.edu.sg/home/ehchua/programming/howto/Ubuntu_HowTo.html#tomcat
+https://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#configure
+https://www.howtoforge.com/tutorial/how-to-install-apache-tomcat-8-5-on-ubuntu-16-04/
+http://stackoverflow.com/questions/4756039/how-to-change-the-port-of-tomcat-from-8080-to-80
+http://thelinuxfaq.com/191-how-to-set-or-increase-memory-heap-size-in-apache-tomcat
+https://tecadmin.net/configure-ssl-certificate-in-tomcat/
+https://tomcat.apache.org/tomcat-8.0-doc/ssl-howto.html
+```
+**Install LetsEncrypt SSL in Apache Tomcat**
+```
+Generate keystore file 
+
+keytool -genkey -alias root -keyalg RSA -keystore /etc/ssl/keystore/.tomcat-indianic-org-keystore
+
+
+Make changes in below file as per your need and run as sh file 
+
+
+#!/bin/bash
+#Please modify these values according to your environment
+certdir=/etc/letsencrypt/live/tomcat.indianic.org #just replace the domain name after /live/
+keytooldir=/usr/local/jdk/bin #java keytool located in jre/bin
+mydomain=tomcat.indianic.org #put your domain name here
+myemail=rakesh.chauhan@indianic.com #your email
+networkdevice=ens33 #your network device  (run ifconfig to get the name)
+keystoredir=/etc/ssl/keystore/.tomcat-indianic-org-keystore #located in home dir of user that you Tomcat is running under - just replace jira with your user you use for Tomcat, see ps -ef to get user name if you do not know
+
+
+#the script itself:
+cd /var/git/letsencrypt
+git pull origin master
+
+
+
+
+./letsencrypt-auto certonly --standalone --agree-tos --rsa-key-size 4096 -d $mydomain --standalone-supported-challenges http-01 --http-01-port 80 --renew-by-default --email $myemail --renew-by-default 
+
+
+
+
+$keytooldir/keytool -delete -alias root -storepass googlecom -keystore $keystoredir
+$keytooldir/keytool -delete -alias tomcat -storepass googlecom -keystore $keystoredir
+
+
+openssl pkcs12 -export -in $certdir/fullchain.pem -inkey $certdir/privkey.pem -out $certdir/cert_and_key.p12 -name tomcat -CAfile $certdir/chain.pem -caname root -password pass:aaa
+
+
+$keytooldir/keytool -importkeystore -srcstorepass aaa -deststorepass googlecom -destkeypass googlecom -srckeystore $certdir/cert_and_key.p12 -srcstoretype PKCS12 -alias tomcat -keystore $keystoredir
+$keytooldir/keytool -import -trustcacerts -alias root -deststorepass googlecom -file $certdir/chain.pem -noprompt -keystore $keystoredir
+```
+**Backup CODEBASE with 3 days retation and upload to S3 Bucket**
+```
+#!bin/bash
+#Create Variables.
+FILE="$(date +"%d-%m-%Y-%H")"
+YEAR="$(date +"%Y")"
+MONTH="$(date +"%m")"
+DAY="$(date +"%d")"
+
+#########################
+######TO BE MODIFIED#####
+
+### System Setup ###
+mkdir -p /home/ubuntu/wwwbackup/$YEAR/$MONTH/$DAY
+BACKUP=/home/ubuntu/wwwbackup/$YEAR/$MONTH/$DAY
+
+### Binaries ###
+TAR="$(which tar)"
+GZIP="$(which gzip)"
+FTP="$(which ftp)"
+### Today + hour in 24h format ###
+#NOW=$(date +"%d%H")
+
+### Create hourly dir ###
+
+
+### Create dir for each databases, backup tables in individual files ###
+
+
+cd /var/www/html/
+tar zcvf $BACKUP/project.tar.gz project/
+
+ls -lh /home/ubuntu/wwwbackup/$YEAR/$MONTH/$DAY/*.gz | awk '{print $5, $9}' > /home/ubuntu/wwwbackup/$YEAR/$MONTH/$DAY/www_log_$YEAR_$MONTH_$DAY.txt
+
+# Backup Data to S3 Bucket
+s3cmd sync -v /home/ubuntu/wwwbackup/ s3://project.com-code/
+
+s3cmd du -H s3://project.com-code/wwwbackup/$YEAR/$MONTH/$DAY >> /home/ubuntu/wwwbackup/www_log.txt
+
+# Send Email for the backup done to the owners.
+mail -s "Project.com Code Backup" -a /home/ubuntu/mysqlbackup/mysql_log.txt rakesh.chauhan@project.com  << EOF
+"Project.com Code backup has been done and Code files copied to project.com S3 bucket."
+EOF
+
+# Delete files older than 7 Days
+find /home/ubuntu/wwwbackup/* -mtime +1 -exec rm -f {} \;
+```
+**SSH Tunnel**
+```
+ssh -C -L 3306:remote.mysql.com:3306 -i myaws.pem ubuntu@remoteserver
+```
+**SET JAVA_HOME**
+```
+export JAVA_HOME=/usr/local/jdk
+export PATH=$PATH:$JAVA_HOME/bin
+export JAVA_OPTS="-Xms128m -Xmx512m"
+```
+**Install JAVA in Ubuntu**
+```
+Introduction
+As a lot of articles and programs require to have Java installed, this article will guide you through the process of installing and managing different versions of Java.
+Installing default JRE/JDK
+This is the recommended and easiest option. This will install OpenJDK 6 on Ubuntu 12.04 and earlier and on 12.10+ it will install OpenJDK 7.
+Installing Java with apt-get is easy. First, update the package index:
+sudo apt-get update
+Then, check if Java is not already installed:
+java -version
+If it returns "The program java can be found in the following packages", Java hasn't been installed yet, so execute the following command:
+sudo apt-get install default-jre
+This will install the Java Runtime Environment (JRE). If you instead need the Java Development Kit (JDK), which is usually needed to compile Java applications (for exampleApache Ant, Apache Maven, Eclipse and IntelliJ IDEA execute the following command:
+sudo apt-get install default-jdk
+That is everything that is needed to install Java.
+All other steps are optional and must only be executed when needed.
+Installing OpenJDK 7 (optional)
+To install OpenJDK 7, execute the following command:
+sudo apt-get install openjdk-7-jre 
+This will install the Java Runtime Environment (JRE). If you instead need the Java Development Kit (JDK), execute the following command:
+sudo apt-get install openjdk-7-jdk
+Installing Oracle JDK (optional)
+The Oracle JDK is the official JDK; however, it is no longer provided by Oracle as a default installation for Ubuntu.
+You can still install it using apt-get. To install any version, first execute the following commands:
+sudo apt-get install python-software-properties
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+Then, depending on the version you want to install, execute one of the following commands:
+Oracle JDK 6
+This is an old version but still in use.
+sudo apt-get install oracle-java6-installer
+Oracle JDK 7
+This is the latest stable version.
+sudo apt-get install oracle-java7-installer
+Oracle JDK 8
+This is a developer preview, the general release is scheduled for March 2014. This external article about Java 8 may help you to understand what it's all about.
+sudo apt-get install oracle-java8-installer
+Managing Java (optional)
+When there are multiple Java installations on your Droplet, the Java version to use as default can be chosen. To do this, execute the following command:
+sudo update-alternatives --config java
+It will usually return something like this if you have 2 installations (if you have more, it will of course return more):
+There are 2 choices for the alternative java (providing /usr/bin/java).
+
+Selection    Path                                            Priority   Status
+------------------------------------------------------------
+* 0            /usr/lib/jvm/java-7-oracle/jre/bin/java          1062      auto mode
+  1            /usr/lib/jvm/java-6-openjdk-amd64/jre/bin/java   1061      manual mode
+  2            /usr/lib/jvm/java-7-oracle/jre/bin/java          1062      manual mode
+
+Press enter to keep the current choice[*], or type selection number:
+You can now choose the number to use as default. This can also be done for the Java compiler (javac):
+sudo update-alternatives --config javac
+It is the same selection screen as the previous command and should be used in the same way. This command can be executed for all other commands which have different installations. In Java, this includes but is not limited to: keytool, javadoc and jarsigner.
+Setting the "JAVA_HOME" environment variable
+To set the JAVA_HOME environment variable, which is needed for some programs, first find out the path of your Java installation:
+sudo update-alternatives --config java
+It returns something like:
+There are 2 choices for the alternative java (providing /usr/bin/java).
+
+Selection    Path                                            Priority   Status
+------------------------------------------------------------
+* 0            /usr/lib/jvm/java-7-oracle/jre/bin/java          1062      auto mode
+  1            /usr/lib/jvm/java-6-openjdk-amd64/jre/bin/java   1061      manual mode
+  2            /usr/lib/jvm/java-7-oracle/jre/bin/java          1062      manual mode
+
+Press enter to keep the current choice[*], or type selection number:
+The path of the installation is for each:
+/usr/lib/jvm/java-7-oracle
+/usr/lib/jvm/java-6-openjdk-amd64
+/usr/lib/jvm/java-7-oracle
+Copy the path from your preferred installation and then edit the file /etc/environment:
+sudo nano /etc/environment
+In this file, add the following line (replacing YOUR_PATH by the just copied path):
+JAVA_HOME="YOUR_PATH"
+That should be enough to set the environment variable. Now reload this file:
+source /etc/environment
+Test it by executing:
+echo $JAVA_HOME
+If it returns the just set path, the environment variable has been set successfully. If it doesn't, please make sure you followed all steps correctly.
+```
+**Check IP of Instances behind ELB**
+```
+<?php
+exec('aws elb describe-instance-health --load-balancer-name benefit |grep "InstanceId"', $out);
+$string = '';
+foreach($out as $k=> $v) {
+$string .= ' '. trim( str_replace('"InstanceId": ','', $v)).' ';
+}
+
+$new_str = str_replace(',','', $string);
+
+
+exec('aws ec2 describe-instances --instance-ids '.$new_str.' | grep "PublicDnsName"',$put);
+
+$arr = array();
+foreach($put as $kk=> $vv) {
+	$string1 = ''. trim( str_replace('"PublicDnsName": ' ,'', $vv)).'';
+	if(!in_array($string1, $arr)) {
+		array_push($arr, $string1);
+	}
+}
+
+print_r($arr);
+die;
+?>
+```
+**GIT Basic Command**
+```
+git clone https://github.com/stunningric/testrepo.git
+nano index.php
+git commit -m "index.php"
+git add index.php
+git commit -m "index.php"
+git push
+
+Create Remote branch 
+git branch dev
+git push origin dev
+```
 **S3 Policy**
 ```
+--------------------------------------------------------------------------------------------------------
 BUCKET POLICY in S3 PERMISSION
 
 {
@@ -42,7 +299,70 @@ Give Read only permission and put this policy in below option
         }
     ]
 }
+---------------------------------------------------------------------------------------------------------------------
+{
+	"Version": "2012-10-17",
+	"Id": "Policy1451885867327",
+	"Statement": [
+		{
+			"Sid": "Stmt1451885860743",
+			"Effect": "Allow",
+			"Principal": "*",
+			"Action": [
+				"s3:DeleteObject",
+				"s3:GetObject",
+				"s3:PutObject"
+			],
+			"Resource": "arn:aws:s3:::bucketname.com/*"
+		}
+	]
+}
 
+
+IAM 
+
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "s3:ListAllMyBuckets",
+            "Resource": "*"
+        },
+        {
+            "Action": "s3:*",
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:s3:::bucketname.eu",
+                "arn:aws:s3:::bucketname.eu/*"
+            ]
+        }
+    ]
+}
+
+
+{
+	"Version": "2012-10-17",
+	"Id": "http referer policy example",
+	"Statement": [
+		{
+			"Sid": "Allow get requests originating from www.alservicelink.com.",
+			"Effect": "Allow",
+			"Principal": "*",
+			"Action": "s3:GetObject",
+			"Resource": "arn:aws:s3:::bucketname/*",
+			"Condition": {
+				"StringLike": {
+					"aws:Referer": [
+						"https://www.domainame.com/*",
+						"https://alservicelink.com/*",
+								]
+				}
+			}
+		}
+	]
+}
 ```
 **Screen Help**
 ```
