@@ -10,6 +10,7 @@ pm2 start python.py -n "Python"						#python olery_service.py
 pm2 start npm -n "appname" -- start					#npm start
 pm2 start npm -n "appname" -- start					#npm start
 pm2 start start.sh -n "Bash"						#sh start.sh
+PORT=3001 pm2 start npm -n "appname" -- start				#npm start PARAMETER1 PARAMETER2
 sudo pm2 start http.js -n "proxy" --interpreter=/home/developer/node-v6.10.3/bin/node #sudo node http.js
 
 Once run all application execute "pm2 startup" which gives generate another command to run as below
