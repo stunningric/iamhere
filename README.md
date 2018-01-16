@@ -1,4 +1,4 @@
-**tar exclude command**
+**TAR exclude command**
 ```
 tar -zcv --exclude='file1' --exclude='patter*' --exclude='file2' -f /backup/filename.tgz .	
 
