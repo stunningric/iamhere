@@ -1,3 +1,106 @@
+**S3 Policy**
+```
+BUCKET POLICY in S3 PERMISSION
+
+{
+	"Version": "2012-10-17",
+	"Id": "Policy123453331623",
+	"Statement": [
+		{
+			"Sid": "Stmt14445678325671",
+			"Effect": "Allow",
+			"Principal": "*",
+			"Action": [
+				"s3:GetObject",
+				"s3:PutObject"
+			],
+			"Resource": "arn:aws:s3:::bucketname/*"
+		}
+	]
+}
+
+
+PERMISSION IN IAM 
+
+Give Read only permission and put this policy in below option
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Stmt144953456000",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:ListBucket",
+                "s3:PutObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::bucketname/*",
+                "arn:aws:s3:::bucketname-code/*"
+            ]
+        }
+    ]
+}
+
+```
+**Screen Help**
+```
+screen -ls						#Check screen
+screen -r screenno.					#Attach screen	
+Ctrl+ad							#Dettach screen
+screen -X -S screenno. quit				#Quit screen 
+```
+**Apache config file in Linux Distro**
+```
+ServerRoot              ::      /etc/httpd
+Primary Config Fle      ::      /etc/httpd/conf/httpd.conf
+Other Config Files      ::      /etc/httpd/conf.d
+Module Locations        ::      /usr/lib/httpd/modules
+DocumentRoot            ::      /var/www/html
+ErrorLog                ::      /var/log/httpd/error_log
+AccessLog               ::      /var/log/httpd/access_log
+cgi-bin                 ::      /var/www/cgi-bin (empty and disabled by default)
+binary                  ::      /usr/sbin/httpd
+runtime directory       ::      /etc/httpd/run
+start/stop              ::      /sbin/service httpd {start|stop|restart|condrestart|reload|status|fullstatus|graceful|help|configtest}
+
+
+Notes:
+There is an extra config file in /etc/sysconfig/httpd which can be used to change to the worker mpm /usr/sbin/httpd.worker. 
+Extra
+ config files named *.conf are loaded from /etc/httpd/conf.d. This 
+directory is used by packages like mod_python for drop-in configs 
+If
+ you're having issues with authorization and your permissions are 
+correct, you might have problems with SELinux permissions. Take a look 
+at httpd_selinux(8) and related documentation. Particularly sealert(8) can be used for analysis and suggested solutions. 
+
+
+RedHat 9.0 and older:
+
+ServerRoot              ::      /etc/httpd
+Primary Config Fle      ::      /etc/httpd/conf/httpd.conf
+DocumentRoot            ::      /var/www/html
+ErrorLog                ::      /var/log/httpd/error_log
+AccessLog               ::      /var/log/httpd/access_log
+cgi-bin                 ::      /var/www/cgi-bin (empty and disabled by default)
+binary                  ::      /usr/sbin/httpd
+start/stop              ::      /sbin/service httpd {start|stop|restart|condrestart|reload|status|fullstatus|graceful|help|configtest}
+
+
+Mandriva (Apache httpd 2.2):
+
+ServerRoot              ::      /etc/httpd
+Primary Config Fle      ::      /etc/httpd/conf/httpd.conf
+DocumentRoot            ::      /var/www/html
+ErrorLog                ::      /var/log/httpd/error_log
+AccessLog               ::      /var/log/httpd/access_log
+cgi-bin                 ::      /var/www/cgi-bin
+binary                  ::      /usr/sbin/httpd
+start/stop              ::      /sbin/service httpd
+{start|stop|restart|reload|graceful|condreload|closelogs|update|condrestart|status|extendedstatus|configtest|configtest_vhosts|semcleanrestart|debug|show_defines}
+```
 **Check DB Size MySQL**
 ```
 SELECT table_schemaTABLENAME, sum( data_length + index_length ) / 1024 / 1024 "Data Base Size in MB",sum( data_free )/ 1024 / 1024 "Free Space in MB" FROM information_schema.TABLES GROUP BY table_schema ;
