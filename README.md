@@ -1,3 +1,7 @@
+**MySQL Import CSV with LOADINTO**
+```
+LOAD DATA INFILE 'data.csv' INTO TABLE mytables  FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
+```
 **TAR exclude command**
 ```
 tar -zcv --exclude='file1' --exclude='patter*' --exclude='file2' -f /backup/filename.tgz .	
