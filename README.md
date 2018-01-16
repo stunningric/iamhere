@@ -1,3 +1,61 @@
+**MySQL backup and upload to S3 Bucket**
+```
+#!bin/bash
+#Create Variables.
+FILE="$(date +"%d-%m-%Y-%H")"
+YEAR="$(date +"%Y")"
+MONTH="$(date +"%m")"
+DAY="$(date +"%d")"
+#########################
+######TO BE MODIFIED#####
+### System Setup ###
+mkdir -p /root/backup/mysql_db/$YEAR/$MONTH/$DAY
+BACKUP=/root/backup/mysql_db/$YEAR/$MONTH/$DAY
+
+### MySQL Setup ###
+MUSER="backup"
+MPASS="p@ssw0rd123"
+MHOST="localhost"
+
+######DO NOT MAKE MODIFICATION BELOW#####
+#########################################
+### Binaries ###
+TAR="$(which tar)"
+GZIP="$(which gzip)"
+FTP="$(which ftp)"
+MYSQL="$(which mysql)"
+MYSQLDUMP="$(which mysqldump)"
+
+### Today + hour in 24h format ###
+#NOW=$(date +"%d%H")
+
+### Create dir for each databases, backup tables in individual files ###
+for db in $(mysql --user=$MUSER --password=$MPASS -e 'show databases' -s --skip-column-names|grep -vi information_schema|grep -vi performance_schema);
+do mysqldump --add-drop-table --allow-keywords --routines --skip-lock-tables -q -c --user=$MUSER --password=$MPASS --opt $db | gzip > "$BACKUP/$db.gz";
+done
+
+### Create txt for each databases, write file size and directory location to the txt file ###
+
+ls -lh /root/backup/mysql_db/$YEAR/$MONTH/$DAY/*.gz | awk '{print $5, $9}' > /root/backup/mysql_log.txt 
+
+### Backup Data to S3 Bucket ###
+
+s3cmd sync -v /root/backup/ s3://bucketname/ 
+
+### Write total data backed (MB’s) up to S3 bucket ###
+s3cmd du -H s3://nanserverbackup/mysql_db/$YEAR/$MONTH/$DAY >> /root/backup/mysql_log.txt
+
+### Send Email for the backup done to the owners ###
+mail -s "DataBase (Subject Server) Rsync" -a /root/backup/mysql_log.txt email@gmail.com,email@gmail.com  << EOF
+"Mysql Database BackUp Done and Database files copied to S3 bucket. Please see the attached log file for more details."
+EOF
+
+
+echo "Backup Done SucessFully"
+
+### Delete files older than 3 Days ###
+find /root/backup/mysql_db/* -mtime +3 -exec rm -rf {} \;
+```
 **Check MongoDB connection with PHP**
 ```
 <?php
