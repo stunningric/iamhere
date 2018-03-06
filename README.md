@@ -1053,21 +1053,21 @@ app.listen(3000, function () {
 
 # node index.js
 ```
-** Mongodb drop database**
+**Mongodb drop database**
 ```
 mongo dbname --eval "db.dropDatabase()"
 
 ```
-** Mongodb restore database**
+**Mongodb restore database**
 ```
 mongorestore --db dbname --verbose /home/ec2-user/MongodbBackup/mongodb-localhost-2018-03-06-1003 ---BSON JSON file path
 
 ```
-** Mongodb backup database**
+**Mongodb backup database**
 ```
 mongodump -h localhost:27017 -d dbname
 
 ```
-** rethinkdb backup database**
+**rethinkdb backup database**
 ```
 rethinkdb dump -c localhost:28015 -e dbname -f dbbackupname.tar.gz
