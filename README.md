@@ -1075,5 +1075,4 @@ rethinkdb dump -c localhost:28015 -e dbname -f dbbackupname.tar.gz
 ```
 **Change Webmin root password**
 ```
-
 sudo /usr/libexec/webmin/changepass.pl /etc/webmin root NewPAssword
