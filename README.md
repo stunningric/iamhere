@@ -1058,5 +1058,11 @@ app.listen(3000, function () {
 mongo dbname --eval "db.dropDatabase()"
 
 ```
-** Mongodb drop database**
+** Mongodb restore database**
 ```
+mongorestore --db dbname --verbose /home/ec2-user/MongodbBackup/mongodb-localhost-2018-03-06-1003 ---BSON JSON file path
+
+```
+** Mongodb backup database**
+```
+mongodump -h localhost:27017 -d dbname
