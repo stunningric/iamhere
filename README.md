@@ -1066,3 +1066,8 @@ mongorestore --db dbname --verbose /home/ec2-user/MongodbBackup/mongodb-localhos
 ** Mongodb backup database**
 ```
 mongodump -h localhost:27017 -d dbname
+
+```
+** rethinkdb backup database**
+```
+rethinkdb dump -c localhost:28015 -e dbname -f dbbackupname.tar.gz
