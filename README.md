@@ -18,6 +18,9 @@ Once run all application execute "pm2 startup" which gives generate another comm
 sudo env PATH=$PATH:/usr/local/bin /usr/local/n/versions/node/6.0.0/lib/node_modules/pm2/bin/pm2 startup systemd -u dev --hp /home/dev --service-name pm2
 
 Once execute the command it will create service pm2, which will restart all app if server restart.
+
+pm2 start server.js --name appname -- -e=dev . ------ for dev
+Run pm2 with environment file configuration. create .env file with multiple environment like .env.live , .env.dev , .env.local
 ```
 **MySQL Import CSV with LOAD INFILE**
 ```
@@ -92,14 +95,14 @@ tar zcvf mongodb-$MONGO_HOST-$TIMESTAMP.tar.gz mongodb-$MONGO_HOST-$TIMESTAMP
 
 
 # Backup Data to S3 Bucket
-s3cmd sync -v /home/ubuntu/mongodbbackup/*.tar.gz s3://domainname-mongodb-backup/
-
+s3cmd sync -v /home/ubuntu/mongodbbackup/*.tar.gz s3://domainname-mongodb-backup/   ----- IF used s3cdm
+aws s3 sync /home/ec2-user/MongodbBackup/ s3://petbubs-mongodb-backup/      ----- IF used aws cli
 
 s3cmd du -H s3://domainname-mongodb-backup/ >> /home/ubuntu/mongodbbackup/mongodb_log$TIMESTAMP.txt
 
 
 # Send Email for the backup done to the owners.
-#mail -s "DYRCT.COM MongoDB Backup" -a /home/ubuntu/mongodbbackup/mongodb_log$TIMESTAMP.txt rchauhan@theitideas.com,second@theitideas.com,third@theitideas.com  << EOF
+#mail -s "Server MongoDB Backup" -a /home/ubuntu/mongodbbackup/mongodb_log$TIMESTAMP.txt rchauhan@theitideas.com,second@theitideas.com,third@theitideas.com  << EOF
 #"MongoDB Database backup done and Database files copied to S3 bucket. Please see the attached log file for more details."
 #EOF
 
@@ -117,7 +120,7 @@ find /home/ubuntu/mongodbbackup/* -mtime +5 -exec rm -rf {} \;
  
 # Upload to S3
 
-#S3_BUCKET_NAME="dyrct-mongodb-backup" #replace with your bucket name on Amazon S3
+#S3_BUCKET_NAME="server-mongodb-backup" #replace with your bucket name on Amazon S3
 #S3_BUCKET_PATH=""
 
 #s3cmd put mongodb-$HOSTNAME-$TIMESTAMP.tar 
@@ -1049,4 +1052,11 @@ app.listen(3000, function () {
 });
 
 # node index.js
+```
+** Mongodb drop database**
+```
+mongo dbname --eval "db.dropDatabase()"
+
+```
+** Mongodb drop database**
 ```
