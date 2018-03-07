@@ -924,16 +924,16 @@ $mail->SMTPDebug = 0;
 
 $mail->SMTPAuth = true;                // enable SMTP authentication
 $mail->SMTPSecure = "tls";              // sets the prefix to the servier
-$mail->Host = "smtp.fsdata.se";        // sets Gmail as the SMTP server
+$mail->Host = "smtp.domainname.se";        // sets Gmail as the SMTP server
 $mail->Port = 26;                     // set the SMTP port for the GMAIL
 
 
-$mail->Username = "info@moosek.com";  // Gmail username
+$mail->Username = "info@domainname.com";  // Gmail username
 $mail->Password = "wikmar";      // Gmail password
 
 
 $mail->CharSet = 'windows-1250';
-$mail->SetFrom ('info@moosek.com', 'Example.com Information');
+$mail->SetFrom ('info@domainname.com', 'Example.com Information');
 $mail->AddBCC ( 'rakesh.chauhan@domainname.com', 'Example.com Sales Dep.');
 $mail->Subject = $subject;
 $mail->ContentType = 'text/plain';
