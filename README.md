@@ -574,7 +574,7 @@ IAM
 	"Id": "http referer policy example",
 	"Statement": [
 		{
-			"Sid": "Allow get requests originating from www.alservicelink.com.",
+			"Sid": "Allow get requests originating from www.domainname.com.",
 			"Effect": "Allow",
 			"Principal": "*",
 			"Action": "s3:GetObject",
@@ -583,7 +583,7 @@ IAM
 				"StringLike": {
 					"aws:Referer": [
 						"https://www.domainame.com/*",
-						"https://alservicelink.com/*",
+						"https://domainname.com/*",
 								]
 				}
 			}
