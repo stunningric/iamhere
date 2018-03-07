@@ -267,7 +267,7 @@ https://tomcat.apache.org/tomcat-8.0-doc/ssl-howto.html
 ```
 Generate keystore file 
 
-keytool -genkey -alias root -keyalg RSA -keystore /etc/ssl/keystore/.tomcat-indianic-org-keystore
+keytool -genkey -alias root -keyalg RSA -keystore /etc/ssl/keystore/.tomcat-domainname-org-keystore
 
 
 Make changes in below file as per your need and run as sh file 
@@ -275,12 +275,12 @@ Make changes in below file as per your need and run as sh file
 
 #!/bin/bash
 #Please modify these values according to your environment
-certdir=/etc/letsencrypt/live/tomcat.indianic.org #just replace the domain name after /live/
+certdir=/etc/letsencrypt/live/tomcat.domainname.org #just replace the domain name after /live/
 keytooldir=/usr/local/jdk/bin #java keytool located in jre/bin
-mydomain=tomcat.indianic.org #put your domain name here
-myemail=rakesh.chauhan@indianic.com #your email
+mydomain=tomcat.domainname.org #put your domain name here
+myemail=rakesh.chauhan@domainname.com #your email
 networkdevice=ens33 #your network device  (run ifconfig to get the name)
-keystoredir=/etc/ssl/keystore/.tomcat-indianic-org-keystore #located in home dir of user that you Tomcat is running under - just replace jira with your user you use for Tomcat, see ps -ef to get user name if you do not know
+keystoredir=/etc/ssl/keystore/.tomcat-domainname-org-keystore #located in home dir of user that you Tomcat is running under - just replace jira with your user you use for Tomcat, see ps -ef to get user name if you do not know
 
 
 #the script itself:
@@ -934,7 +934,7 @@ $mail->Password = "wikmar";      // Gmail password
 
 $mail->CharSet = 'windows-1250';
 $mail->SetFrom ('info@moosek.com', 'Example.com Information');
-$mail->AddBCC ( 'rakesh.chauhan@indianic.com', 'Example.com Sales Dep.');
+$mail->AddBCC ( 'rakesh.chauhan@domainname.com', 'Example.com Sales Dep.');
 $mail->Subject = $subject;
 $mail->ContentType = 'text/plain';
 $mail->IsHTML(false);
