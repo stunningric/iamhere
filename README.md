@@ -1076,3 +1076,35 @@ rethinkdb dump -c localhost:28015 -e dbname -f dbbackupname.tar.gz
 **Change Webmin root password**
 ```
 sudo /usr/libexec/webmin/changepass.pl /etc/webmin root NewPAssword
+
+```
+**Run PM2 with environment file**
+```
+pm2 start app.js --name keyword_analysis -- -e=prod
+e.g. you must have ".env.prod" or other environment file.
+
+```
+**Restore / Backup in AWS RDS MSSQL**
+```
+1) Create bucket for store restore and backup file.
+2) Create custome "Option Group" for RDS Instance.
+3) Add new option "SQLSERVER_BACKUP_RESTORE" in newly created Option Group. In this option it will ask you to create IAM role for access bucket from RDS Service as well.
+4) Update new Option Group with your RDS Instance. and use below commands to backup or restore.
+
+Restore Procedure : 
+exec msdb.dbo.rds_restore_database 
+        @restore_db_name='databasename', 
+        @s3_arn_to_restore_from='arn:aws:s3:::bucketname/databasebackupfilename.bak';
+Once you execute restore or backup command you will get task id in resule window. e.g. you will get task_id 1 then execute below command to check status of your restoration of database.
+
+To check status of any task :
+EXEC msdb.dbo.rds_task_status 
+    @task_id = 1
+    GO
+
+Take Backup of Database :
+exec msdb.dbo.rds_backup_database 
+        @source_db_name='databasename',
+        @s3_arn_to_backup_to='arn:aws:s3:::bucketname/databasebackupfilename.bak.bak',
+        @overwrite_S3_backup_file=1,
+        @type='FULL';
