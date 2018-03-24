@@ -1107,3 +1107,17 @@ exec msdb.dbo.rds_backup_database
 **Install Lamp in AWS Amazon Image**
 ```
 https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-lamp-amazon-linux-2.html
+
+```
+**Clear RAM Memory Cache, Buffer and Swap Space on Linux**
+```
+Every Linux System has three options to clear cache without interrupting any processes or services.
+
+1. Clear PageCache only
+sync; echo 1 > /proc/sys/vm/drop_caches
+2. Clear dentries and inodes
+sync; echo 2 > /proc/sys/vm/drop_caches
+3. Clear PageCache, dentries and inodes
+sync; echo 3 > /proc/sys/vm/drop_caches 
+
+
