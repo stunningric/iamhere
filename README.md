@@ -1120,4 +1120,15 @@ sync; echo 2 > /proc/sys/vm/drop_caches
 3. Clear PageCache, dentries and inodes
 sync; echo 3 > /proc/sys/vm/drop_caches 
 
+```
+**Jenkins CI**
+```
+After installation of Jenkins, Login into jenkins user and create SSH key for passwordless login 
+"ssh-keygen -t rsa"
+It will generate private and public key for jenkins user.
+Now, Put public key contents "id_rsa.pub" into remote server's user "authorized_keys" file. They you will be able to execute command in remote server with jenkins.
+
+ssh -T user@serverip <<EOF
+ sudo yum install httpd -y
+EOF
 
