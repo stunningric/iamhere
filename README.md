@@ -1078,12 +1078,6 @@ rethinkdb dump -c localhost:28015 -e dbname -f dbbackupname.tar.gz
 sudo /usr/libexec/webmin/changepass.pl /etc/webmin root NewPAssword
 
 ```
-**Run PM2 with environment file**
-```
-pm2 start app.js --name keyword_analysis -- -e=prod
-e.g. you must have ".env.prod" or other environment file.
-
-```
 **Restore / Backup in AWS RDS MSSQL**
 ```
 1) Create bucket for store restore and backup file.
