@@ -1108,3 +1108,8 @@ exec msdb.dbo.rds_backup_database
         @s3_arn_to_backup_to='arn:aws:s3:::bucketname/databasebackupfilename.bak.bak',
         @overwrite_S3_backup_file=1,
         @type='FULL';
+
+```
+**Install Lamp in AWS Amazon Image**
+```
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-lamp-amazon-linux-2.html
