@@ -1132,3 +1132,25 @@ ssh -T user@serverip <<EOF
  sudo yum install httpd -y
 EOF
 
+```
+**Sendmail funcion with AWS SES**
+```
+Ref : http://www.techoism.com/send-email-using-php-script-with-amazon-smtp-authentication/
+
+Downloads : https://drive.google.com/file/d/1OQu7oo18m3kvv_3PULQlKeCOhTAVfYr1/view?usp=sharing
+
+After download PHPMailer.zip extract it.
+Open PHPMailer folder, It has multiple file into this folder. (Send_Mail.php,class.phpmailer.php,class.pop3.php,class.smtp.php,index.php)
+Now, Open Send_Mail.php file and make changes as below 
+
+1 ) $from = "rakesh@theitideas.com";
+2 ) $mail->Host       = "tls://email-smtp.ap-southeast-1.amazonaws.com"; // Amazon SES server, note "tls://" protocol
+3 ) $mail->Username   = "AWSSES USER";  // SES SMTP  username
+4 ) $mail->Password   = "AWSSES PASSWORD";  // SES SMTP password
+5 ) $mail->SetFrom($from, 'Rakesh Chauhan');
+
+Once done open index.php file and add To Address for email sending.
+
+1 ) $to = "rakesh.chauhan@theitideas.com";
+
+Once done, Check open index.php, It will send email from SES to your receipt email id with mentioned From email id.
