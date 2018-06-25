@@ -1154,3 +1154,48 @@ Once done open index.php file and add To Address for email sending.
 1 ) $to = "rakesh.chauhan@theitideas.com";
 
 Once done, Check open index.php, It will send email from SES to your receipt email id with mentioned From email id.
+
+
+```
+Ansible 
+```
+####Sample inventoryfile with private key
+[server]
+10.160.0.4 ansible_ssh_user=rakesh ansible_ssh_private_key_file=/home/rakesh/rakesh.pem
+
+####Sample inventoryfile with private key
+[server]
+10.160.0.4 ansible_ssh_user=rakesh ansible_ssh_pass=/home/rakesh/rakesh.pem
+
+####Sample file with hosts, group and group of group with Linux and Windows host
+# DB Servers
+sql_db1 ansible_host=sql01.xyz.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Lin$Pass
+sql_db2 ansible_host=sql02.xyz.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Lin$Pass
+
+# Web Servers
+web_node1 ansible_host=web01.xyz.com ansible_connection=winrm ansible_user=administrator ansible_password=Win$Pass
+web_node2 ansible_host=web02.xyz.com ansible_connection=winrm ansible_user=administrator ansible_password=Win$Pass
+web_node3 ansible_host=web03.xyz.com ansible_connection=winrm ansible_user=administrator ansible_password=Win$Pass
+
+# Groups
+[db_nodes]
+sql_db1
+sql_db2
+
+[web_nodes]
+web_node1
+web_node2
+web_node3
+
+[boston_nodes] 
+sql_db1
+web_node1
+
+[dallas_nodes]
+sql_db2
+web_node2
+web_node3
+
+[us_nodes:children]
+boston_nodes
+dallas_nodes
