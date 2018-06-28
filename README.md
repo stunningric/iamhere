@@ -1199,3 +1199,14 @@ web_node3
 [us_nodes:children]
 boston_nodes
 dallas_nodes
+
+```
+Memory Commands
+```
+ps -eo ppid,pid,cmd,%cpu,%mem --sort=%mem | grep -v 0.0
+
+ps axo rss,comm,pid \
+| awk '{ proc_list[$2] += $1; } END \
+{ for (proc in proc_list) { printf("%d\t%s\n", proc_list[proc],proc); }}' \
+| sort -n | tail -n 10 | sort -rn \
+| awk '{$1/=1024;printf "%.0fMB\t",$1}{print $2}'
