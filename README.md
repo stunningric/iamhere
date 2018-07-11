@@ -1210,3 +1210,8 @@ ps axo rss,comm,pid \
 { for (proc in proc_list) { printf("%d\t%s\n", proc_list[proc],proc); }}' \
 | sort -n | tail -n 10 | sort -rn \
 | awk '{$1/=1024;printf "%.0fMB\t",$1}{print $2}'
+
+```
+Cheat Sheet
+```
+https://github.com/chubin/cheat.sh
