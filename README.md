@@ -1215,3 +1215,46 @@ ps axo rss,comm,pid \
 Cheat Sheet
 ```
 https://github.com/chubin/cheat.sh
+
+```
+OpenMediaVault Password Reset
+```
+Known Root Password
+Login to the OMV using the root user and the current password via SSH or Console
+enter the following command
+passwd root
+The new password is now active.
+
+Unknown Root Password, but Admin Access to OMV GUI is Available
+In this scenario we still can help ourselves with the GUI. The method we use is, that we create a cron job for the root user which then resets the password.
+
+Navigate to System -> Cron Jobs
+Press the +Add button
+UN-tick the enabled box, so that the cronjob does not run automatically.
+put into the command field the following line, replace newpasswd with your password:
+echo "root:newpasswd" | chpasswd
+press okay
+select the newly created cron job
+Click the run button.
+in the opening window click the start button. It will shortly deactivate and activate again.
+open ssh or console and login as root with your new password.
+Root and Admin Password Unknown
+If you do not know the root password, you need to boot with a Linux live CD like Knoppix or SystemRescueCD
+
+Download a linux boot cd like SystemRescueCD
+Boot from the SystemRescueCD
+Enter the following commands:
+ mkdir /omvroot
+ mount /dev/sda1 /omvroot
+ cd /omvroot/etc
+Edit with your preferred editor (nano/vim) the file /omvroot/etc/shadow
+vi /omvroot/etc/shadow
+You will see a line like this (first line) (your encrypted key will be much longer than this)
+root:dsfDSDF!s:12581:0:99999:7:::
+Remove everything between the first and second ':' which is in this example 'dsfDSDF!s'. The line should look like this:
+root::12581:0:99999:7:::
+Final steps:
+cd /
+umount /omvroot
+reboot
+Now connect to OMV via ssh or console and login as root.
