@@ -1288,4 +1288,11 @@ getfacl dir2/
 
 getfacl file1 | setfacl --set-file=- file2
 
---> 
+--> Give default permission (After give permission, Any data will generate that will get default permission by default)
+
+setfacl -R -m u:rakeshdev:rwx dev/
+setfacl -R -m d:u:rakeshdev:rwx dev/
+setfacl -R -m u:kuldeepqa:rwx,u:rakeshdev:rwx,u:gajjarstag:r dev/
+setfacl -R -m d:u:kuldeepqa:rwx,d:u:rakeshdev:rwx,d:u:gajjarstag:r dev/
+
+
