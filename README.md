@@ -1258,3 +1258,34 @@ cd /
 umount /omvroot
 reboot
 Now connect to OMV via ssh or console and login as root.
+
+
+```
+setfacl
+```
+# -R --Recursive
+# -m --Modify permission
+# -d Default
+# setfacl -x ACL file/directory  	# remove only specified ACL from file/directory.
+# setfacl -b  file/directory   		#removing all ACL from file/direcoty
+--> add permission
+setfacl -R -dm u:username:rx foldername
+
+--> Remove permission 
+setfacl -dx u:kuldeepqa: dev/
+
+Remove whole ACL Permission
+setfacl -b foldername
+
+--> Multiple users permission
+setfacl -m u:user1:rwx,g:mygroup:rwx,u:user3:r dir1/
+
+
+--> Copy ACL from one file to other
+getfacl dir1/ > copy.txt 
+setfacl -M copy.txt dir2/
+getfacl dir2/ 
+
+getfacl file1 | setfacl --set-file=- file2
+
+--> 
