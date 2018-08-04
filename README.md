@@ -1297,3 +1297,16 @@ setfacl -R -m d:u:kuldeepqa:rwx,d:u:rakeshdev:rwx,d:u:gajjarstag:r dev/
 
 https://portal.tacc.utexas.edu/tutorials/acls
 
+```
+By mistake given permission -R 777 to root "/" partition
+```
+
+1) Spin up a new instance from the same OS AMI, login to the instance and run the following:
+2) sudo -s
+3) apt-get install acl
+4) cd /
+5) getfacl -R ./ > test_permissions.txt
+6) Now mount the root volume of your broken instance to the new instance on "/mnt/tempvol" and run the following.
+7) cp test_permissions.txt /mnt/tempvol
+8) cd /mnt/tempvol
+9) setfacl --restore=test_permissions.txt /mnt/tempvol
