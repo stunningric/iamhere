@@ -1310,3 +1310,9 @@ By mistake given permission -R 777 to root "/" partition
 7) cp test_permissions.txt /mnt/tempvol
 8) cd /mnt/tempvol
 9) setfacl --restore=test_permissions.txt /mnt/tempvol
+
+
+```
+Clear History in Linux
+```
+cat /dev/null > ~/.bash_history && history -c && exit
