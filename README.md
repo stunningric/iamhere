@@ -1316,3 +1316,81 @@ By mistake given permission -R 777 to root "/" partition
 Clear History in Linux
 ```
 cat /dev/null > ~/.bash_history && history -c && exit
+
+```
+Change Key - Pair AWS
+```
+
+Method 1: Launching a clone from AMI - IP address will be changed
+====================================================
+Step1: Create an AMI of the instance: Select instance from EC2 console >> Actions >>Image >>Create image >> Give a name,image description in the fields, select no reboot >>click on create image
+Step2: It will take sometime for the AMI to be created. You can see the AMI as available once its created under: EC2 console >>Left side menu >>Images>> AMI
+Step3: Launch an instance from the AMI : Select the AMI >>click on launch, select same instance type and assign same security group of old instance. At the last step, it will ask you to select a key. Choose create a new key and launch the instance
+Step4: Login to the new instance using the new key file.
+
+
+Method 2: Using cloud-init as user data.
+===============================
+step1: Generate the key-pair from EC2 console and download it. Go to EC2 console-->Key pairs-->create keypair. Once the keypair is generated download it.
+step2: Find the public key using the below command:
+
+For example:
+
+#:Downloads $ ssh-keygen -y -f keyname.pem 
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCHHOAZ+GacPymnsW+AFqtgQJ3VaDpwdJ69wjlkWOOji6Dpx1HFZIJ9zrbVcliOmATA1ozgmGo2teXGCwUrPKV/stYOLkRAUqXVdMWkWoMr8Ogg1qbMi+5Yek5GMqUGZ/I536jcKds9M2XGCsFDXfikMe13XufivMRKkNAArRzUkCT7nCXqwsKRPm4MuD1KKnUwEsy1zxeALy7AXs2uSmTLs6Qz6q7OBrJD2AtwYWjqM76ei0JO+LJd9fsStbqSsXESN89S+9ZHt0tMtt5z8iGEbApCJ601KciTaLrRX58b6Hqk3VUiVpb2mSnDhY4rS9xIbSCwtS+a3UCuvAMKK9Cd
+
+In the above output, keyname.pem is the file which is generated in step1
+
+Step3: Stop the instance and add userdata. Select instance-->actions--->Instance settings-->view/change userdata.
+
+For example:
+
+#cloud-config
+cloud_final_modules:
+- [users-groups,always]
+users:
+  - name: ec2-user
+    groups: [ ec2-user ]
+    sudo: [ "ALL=(ALL) NOPASSWD:ALL" ]
+    shell: /bin/bash
+    ssh-authorized-keys: 
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCHHOAZ+GacPymnsW+AFqtgQJ3VaDpwdJ69wjlkWOOji6Dpx1HFZIJ9zrbVcliOmATA1ozgmGo2teXGCwUrPKV/stYOLkRAUqXVdMWkWoMr8Ogg1qbMi+5Yek5GMqUGZ/I536jcKds9M2XGCsFDXfikMe13XufivMRKkNAArRzUkCT7nCXqwsKRPm4MuD1KKnUwEsy1zxeALy7AXs2uSmTLs6Qz6q7OBrJD2AtwYWjqM76ei0JO+LJd9fsStbqSsXESN89S+9ZHt0tMtt5z8iGEbApCJ601KciTaLrRX58b6Hqk3VUiVpb2mSnDhY4rS9xIbSCwtS+a3UCuvAMKK9Cd
+
+   In the above output,  you can see username and group name is set ec2-user. You need to copy public key from step2 and paste it under section ssh-authorized-keys.
+
+   step4: Give read only permission to pem file where you downloaded it , in my case it is cloud-init.pem file.
+
+   $ chmod 400 keyname.pem
+
+
+  step5: start the instance. You should be able to ssh using new SSH key pair
+
+  For example:
+
+ $ ssh -i "keyname.pem" ec2-user@ec2-x-x-x-x.compute-1.amazonaws.com 
+
+For more information, you can go thorugh the below link:
+
+https://aws.amazon.com/premiumsupport/knowledge-center/ec2-user-account-cloud-init-user-data/ 
+
+Method 3: Using recovery instance and copying keys - IP address will be changed
+==============================================================
+Step1: Either Create a AMI/snapshot of the root volume before proceeding further to ensure that you have backup in case something goes wrong
+Step2: Launch a recovery instance (t2.micro) with the same Linux version Specify a new key file for the same.
+Step3: Stop the problematic instance and detach the root volume from : EC2 console >> volumes >>actions >>detach
+Step4: Attach the volume as secondary to the recovery instance : Select volume >>attach >>select recovery instance >>attach as /dev/sdf
+step5: Mount the /dev/sdf to /mnt and copy the key of recovery instance to secondary volume using commands below
+
+sudo mount /dev/xvdf1 /mnt
+sudo cd /mnt/home/ec2-user/.ssh
+sudo rm /authorized_keys
+sudo cp /home/ec2-user/.ssh/authorized_keys /mnt/home/ec2-user/.ssh/authorized_keys
+sudo cd /mnt/home/ec2-user/.ssh/
+sudo chown ec2-user:ec2-user authorized_keys
+sudo chmod 600 authorized_keys
+
+Note: In the above commands, ec2-user is the username of the instance. This may vary depending upon the Linux distribution. So, I would request you to use it as per your Linux distribution.
+
+Step6: Stop the recovery instance
+Step7: Once it has stopped completely, detach the secondary root volume from recovery instance and attach it back to the problem instance as /dev/xvda
+Step8: Start the problematic instance now. Now you will be able to connect with the same key you generated for the recovery instance in the problem instance.
