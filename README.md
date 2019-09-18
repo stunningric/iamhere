@@ -1394,3 +1394,14 @@ Note: In the above commands, ec2-user is the username of the instance. This may 
 Step6: Stop the recovery instance
 Step7: Once it has stopped completely, detach the secondary root volume from recovery instance and attach it back to the problem instance as /dev/xvda
 Step8: Start the problematic instance now. Now you will be able to connect with the same key you generated for the recovery instance in the problem instance.
+
+
+```
+Change in sudoers file
+```
+sed -i '26s/.*/\%sudo   ALL\=\(ALL\:\ALL\) NOPASSWD\: ALL/' /etc/sudoers
+
+```
+For loop
+```
+for i in `cat r.txt` ; do  ssh -o StrictHostKeyChecking=no username@$i "hostname;sudo /etc/init.d/apache2 restart;sudo /etc/inid.t/apache2 status" ; done
