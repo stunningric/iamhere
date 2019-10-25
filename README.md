@@ -1405,3 +1405,25 @@ sed -i '26s/.*/\%sudo   ALL\=\(ALL\:\ALL\) NOPASSWD\: ALL/' /etc/sudoers
 For loop
 ```
 for i in `cat r.txt` ; do  ssh -o StrictHostKeyChecking=no username@$i "hostname;sudo /etc/init.d/apache2 restart;sudo /etc/inid.t/apache2 status" ; done
+
+
+```
+install java manually
+```
+After download .tag.gz file 
+cd /usr/lib
+tar -zxvf jdk-8u231-linux-x64.tar.gz
+mkdir java
+ln -s jdk1.8.0_231 java
+vim /etc/environment
+--- -->>> Add one line as below < --
+JAVA_HOME="/usr/lib/java"
+-----------------------------
+
+update-alternatives --install "/usr/bin/java" "java" "/usr/lib/java/bin/java" 0
+update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/java/bin/javac" 0
+update-alternatives --set java /usr/lib/java/bin/java
+update-alternatives --set javac /usr/lib/java/bin/javac
+update-alternatives --list java
+update-alternatives --list javac
+java -version
