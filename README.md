@@ -1413,7 +1413,6 @@ install java manually
 After download .tag.gz file 
 cd /usr/lib
 tar -zxvf jdk-8u231-linux-x64.tar.gz
-mkdir java
 ln -s jdk1.8.0_231 java
 vim /etc/environment
 --- -->>> Add one line as below < --
