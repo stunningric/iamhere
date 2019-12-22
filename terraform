@@ -1,0 +1,49 @@
+terraform.tfvars - > Default variable file to put AWS key and secret key
+Example
+AWS_ACCESS_KEY = "KEY"
+AWS_SECRET_KEY = "SECRETKEY"
+
+vars.tf - > Define other variable like below
+variable "AWS_ACCESS_KEY" {
+}
+
+variable "AWS_SECRET_KEY" {
+}
+
+variable "AWS_REGION" {
+  default = "eu-west-1"
+}
+
+variable "AMIS" {
+  type = map(string)
+  default = {
+    us-east-1 = "ami-13be557e"
+    us-west-2 = "ami-06b94666"
+    eu-west-1 = "ami-844e0bf7"
+  }
+}
+
+variable "PATH_TO_PRIVATE_KEY" {
+  default = "mykey"
+}
+
+variable "PATH_TO_PUBLIC_KEY" {
+  default = "mykey.pub"
+}
+
+variable "INSTANCE_USERNAME" {
+  default = "ubuntu"
+}
+
+---
+terraform apply  Applies state 
+destroy   destroys all terraform managed state
+graph create a visual representation of a config or execution plan
+output  output any of your resources 
+plan terraform plan show the changes to be made to the infra.
+refresh   refresh the remote state 
+remote configure remote state storage
+state if you want to rename the resource with terraform state mv aws_instance.example to aws_instance.production
+validate validate your terraform syntax
+fmt proper format your file terraform fmt filename.tf
+
