@@ -1426,3 +1426,11 @@ update-alternatives --set javac /usr/lib/java/bin/javac
 update-alternatives --list java
 update-alternatives --list javac
 java -version
+
+```
+Regular Expressions and Grep
+```
+^	  Match the beginning of the String
+$	  Match the end of the String
+*	  Match zero or more characters
+?	  Match exactly one character
