@@ -1434,3 +1434,29 @@ Regular Expressions and Grep
 $	  Match the end of the String
 *	  Match zero or more characters
 ?	  Match exactly one character
+
+
+```
+Docker Cheatsheet
+```
+docker run ngnix --> Download and start image
+docker ps --> List all running docker container
+docker ps -a --> List all docket container
+docker stop container --> Stop container
+docker rm container --> remove container permenantly 
+docker images --> Available images
+docker rmi imagename --> Remove image
+docker pull nginx --> Just download image
+docker exec containername cat /etc/hosts --> Execute remote command
+docker run -d --name webapp ngnix --> Run in background
+docker attach containerID --> Attach container again
+docker run -it container bash --> login into container with bash 
+docker run ngnix:4.0 --> If required purticuler version  (This is called tag) 
+docker run -p 80:5000 nginx --> it will map port from host 80 to container 5000 port
+docker run -v /opt/mydata:/var/lib/mysql mysql -> it will map local volume to container disk
+docker inspect containerid --> For more details for container
+docker logs containerid --> for logs
+docker build -t webapp-color:lite . --> Build image from dockerfile
+
+
+
