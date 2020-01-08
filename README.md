@@ -1457,6 +1457,7 @@ docker run -v /opt/mydata:/var/lib/mysql mysql -> it will map local volume to co
 docker inspect containerid --> For more details for container
 docker logs containerid --> for logs
 docker build -t webapp-color:lite . --> Build image from dockerfile
+docker run --name db -e POSTGRES_PASSWORD=mysecretpassword -d postgres  --> pass environment 
 
 CMD vs ENTRYPOINT  ::::
 CMD = will run the command from dockerfile
