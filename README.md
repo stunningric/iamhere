@@ -1458,5 +1458,113 @@ docker inspect containerid --> For more details for container
 docker logs containerid --> for logs
 docker build -t webapp-color:lite . --> Build image from dockerfile
 
+CMD vs ENTRYPOINT  ::::
+CMD = will run the command from dockerfile
+ENTRYPOINT = we can put into dockerfile and pass the input while launching/run docker
+If someone not provide the ENTRYPOINT input then we have to put both commands into dockerfile, CMD and ENTRYPOINT like below.
+FROM ubuntu
+ENTRYPOINT ["sleep"]
+CMD ["5"]
+So, when user not provide ENTRYPOINT input it will take bydefault 5 because we have given 5 in CMD command
+
+dokcer run -d --name mysql mysql
+docker run -d --name nginx -p 80:80 --link db:mysql nginx
+--link --> will create link and make host entry into host file to connect mysql database in mysql container
+
+DOCKER-COMPOSE ::::
+We can use docker-compose to create all containers with once and linked and mapped all ports
+
+Like :
+docker-compose.yml
+db:
+  image: mysql
+nginx:
+  image: nginx
+  ports:
+   - 80:80
+  links: 
+   - db
+
+Docker-compose - Version ::::
+
+docker-compose.yml (If we use service it will create dedicated network bridge and attach to each containers. So no need to put link into this version2.. It will work on DEPENDS_ON like below )
+version: 2
+services: 
+db:
+  image: mysql
+nginx:
+  image: nginx
+  ports:
+   - 80:80
+  depends_on:
+   - db
+
+
+docker-compose.yml ( for separate networks in docker)
+version: 2
+services: 
+db:
+  image: mysql
+  networks:
+    - backend
+nginx:
+  image: nginx
+  ports:
+   - 80:80
+  networks:
+   -frontend
+
+networks: 
+  frontend:
+  backend:
+
+
+YAML:::: MUST have same Spaces everywhere
+
+KEY-Pair Value 
+
+Key: Value
+Fruit: Apple
+Vegetable: Carrot
+Liquid: Water
+Meat: Chicken
+
+
+Array/ Lists
+Fruits: 
+- Orange
+- Apple
+- Banana
+
+Vegetable:
+- Carrot
+- Cauliflower
+- Tomato
+
+
+Dictionary/ Map
+Banana:
+   Calories: 105
+   Fat: 0.4 g
+   Carbs: 27 G
+Grape:
+   Calories: 109
+   Fat: 0.6 g
+   Carbs: 12 G 
+
+
+KeyValue / Dictionary/List
+Fruits:
+    - Banana:
+        Calories: 105
+        Fat: 0.4 g
+        Carbs: 27 G
+    - Grape:
+        Calories: 109
+        Fat: 0.6 g
+        Carbs: 12 G 
+
+
+
 
 
