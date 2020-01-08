@@ -1566,6 +1566,33 @@ Fruits:
         Carbs: 12 G 
 
 
+docker -H=remoteIP-OR-domainname:2375 run nginx --> download image from private hosted docker registry
+
+docker run --cpus=.5 ubuntu --> Limit container cpu usage
+docker run --memory=100m ubuntu --> Limit container memory usage
+
+docker stored data into host machine "/var/lib/docker"
+
+docker volume create data_volume --> to create volume for docker
+
+docker run -v data_volume:/var/lib/mysql mysql --> attach volume, and it will not delete if you delete docker
+
+docker run --mount type=bind,source=/data/volume1,target=/var/lib/mysql mysql
+
+docker history imageid --> to check command layer of image
+
+docker system df --> check images, container and local volume size 
+
+docker run -v /opt/data/:/var/lib/mysql -d --name mysql-db -e MYSQL_ROOT_PASSWORD=db_pass123 mysql  --> attach volume | set mysql password 
+
+docker network ls --> check network 
+
+docker network create --driver bridge --subnet 182.18.0.1/24 --gateway 182.18.0.1 wp-mysql-network ---> Create new network
+
+docker run --network=wp-mysql-network -e DB_Host=mysql-db -e DB_Password=db_pass123 -p 38080:8080 --name webapp --link mysql-db:mysql-db -d nginx
+
+
+
 
 
 
