@@ -1642,6 +1642,96 @@ kubectl get pods -o wide --> It will show IP and Nod of pods
 
 
 
+etcd port : 2379
+
+kubectl get pods -n kube-system --> check kubernetes own pods
+
+Controller :
+watch status for all node and pods
+node monitor period = 5s default
+node monitor grace period = 40s default
+POD eviction timeout = 5m default
+
+Scheduler :
+Will decide which pod (container) goes which nodes
+It will make sure right pods (Memory and CPU) are place on right nodes
+
+Kube-Proxy :
+Is process to check for new services and add network rules to forward proper traffic to all pods
+
+Kubernetes YAML top level property
+
+vim pod.yml
+
+apiVersion: v1
+kind: Pod OR Service OR ReplicaSet OR Deployment
+metadata:
+  name: myapp-pod
+  labels: 
+    app: myapp
+    type: front-end
+spec: 
+  containers:
+     - name: nginx-container
+       image: nginx
+
+kubectl create -f pod.yml --> Create pod
+kubectl get pods  --> Check pods
+kubectl describe pod myapp-pod  --> Describe everything for pod
+
+
+ReplicaSet :
+vim rc-defination.yml
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: myapp-rc
+  labels: 
+    app: myapp
+    type: front-end
+spec: 
+  template: 
+      metadata:
+        name: myapp-pod
+        labels: 
+          app: myapp
+          type: front-end
+      spec: 
+        containers:
+        - name: nginx-container
+          image: nginx
+  replicas: 3
+
+
+vim replicaset-defination.yml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: myapp-replicaset
+  labels: 
+    app: myapp
+    type: front-end
+spec: 
+  template: 
+      metadata:
+        name: myapp-pod
+        labels: 
+          app: myapp
+          type: front-end
+      spec: 
+        containers:
+        - name: nginx-container
+          image: nginx
+  replicas: 3
+  selector:
+     matchLabels:
+       type: front-end
+
+Upgrade replica size from 3 to 6 
+Just update the yml file and execute "kubectl replace -f replicaset-defination.yml" OR "kubectl scale -replicas=6 -f replicaset-defination.yml"
+
+kubectl get replicaset
+kubectl delete replicaset myapp-replicaset
 
 
 
