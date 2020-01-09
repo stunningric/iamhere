@@ -1591,6 +1591,59 @@ docker network create --driver bridge --subnet 182.18.0.1/24 --gateway 182.18.0.
 
 docker run --network=wp-mysql-network -e DB_Host=mysql-db -e DB_Password=db_pass123 -p 38080:8080 --name webapp --link mysql-db:mysql-db -d nginx
 
+```
+Kubernetes Basics
+```
+Kubernetes 
+ Nodes : Instances (Servers)
+ Pods : Docker running inside Nodes
+
+Kubernetes Components :
+
+API Server : 
+etcd : distributed reliable key-value store DB
+Scheduler :  responsible for distributing work or containers across multiple nodes
+Controller : 
+Container Runtime : underlying framework that is responsible for running application in containers like Docker, rkt, CRI-O 
+Kubelet : 
+
+In Master 
+API-Server
+ETCD
+Controller
+Schedular
+
+In Node 
+Kubelet
+Container Runtime
+
+kubectl :  command line utility used to manage a kubernetes cluster
+Minikube : To setup kubernetes (for single node)
+Kubeadm : To setup kubernetes (for multi node)
+
+
+Setup multinode kubernetes cluster with KUBEADM 
+install docker in all master and node servers
+install kubeadm|kubelet|kubectl in all master and node servers
+kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=APISERVERIP (MASTER) --> In this stage need to define which network package need to use like flannel etc.
+Few instruction will be printed when compelted. Follow that command to join worker node to Master
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/2140ac876ef134e0ed5af15c65e414cf26827915/Documentation/kube-flannel.yml  --> It will create kube-flannel pod 
+now run the kubeadm join command which we copied into kubeadm init step
+kubectl run nginx --image=nginx --> Launch single pod
+kubectl get pods --> List pods (container)
+
+
+
+PODS: 
+kubectl get nodes --> list nodes (servers/instances)
+kubectl run nginx --image=nginx
+kubectl describe pods --> It will describe all details of pods
+kubectl get pods -o wide --> It will show IP and Nod of pods
+
+
+
+
+
 
 
 
