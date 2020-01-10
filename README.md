@@ -1897,3 +1897,54 @@ kubectl create service nodeport nginx --tcp=80:80 --node-port=30080 --dry-run -o
 
 Both the above commands have their own challenges. While one of it cannot accept a selector the other cannot accept a node port. I would recommend going with the `kubectl expose` command. If you need to specify a node port, generate a definition file using the same command and manually input the nodeport before creating the service.
 -------------------------------------------------------------------------------------------------------------------------------------
+
+Imperative command :::
+
+kubectl run --generator=run-pod/v1 nginx-pod --image=nginx:alpine    --> Launch pod
+kubectl run --generator=run-pod/v1 redis --image=redis:alpine -l tier=db --> launch pod with label
+kubectl expose pod redis --port=6379 --name redis-service  --> create service for existing pod
+kubectl create deployment webapp --image=kodekloud/webapp-color --> Create deployment 
+kubectl scale deployment/webapp --replicas=3 --> The scale the webapp to 3 using command 
+kubectl expose deployment webapp --type=NodePort --port=8080 --name=webapp-service --dry-run -o yaml > webapp-service.yaml --> to generate a service definition file. Then edit the nodeport in it and create a service.
+
+------------------------- If scheduler not available-------------------
+Need to add nodeNade parameter for assigning node manually
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  nodeName: node-01
+  
+  
+  Label selectors ::::
+  
+  kubectl get pods -l env=dev,bu=digital
+  kubectl get pods -l env=dev,bu=digital,tier=frontend
+  
+vim labels.yaml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: replicaset-1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+	
+	
+
+  
