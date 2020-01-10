@@ -1778,9 +1778,10 @@ kubectl create namespace dev
 kubectl get pods --namespace=dev
 kubectl get pod -A  OR kubectl get pods --all-namespace --> All pods from all namespace
 kubectl config set-context $(kubectl config current-context) --namespace-dev
-
+kubectl get all --all-namespaces   --> All details like deployment,service pod etc.
 
 SERVICE:::
+
 Service Tyoe : 
 NodePort
 ClusterIP
@@ -1805,5 +1806,19 @@ spec:
   selector:
       app: myapp
       type: front-end
+      
+vim service-defination.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: back-end
+spec:
+  type: ClusterIP
+  ports:
+    - targetPort: 80
+      port: 80
+  selector:
+      app: myapp
+      type: back-end
       
 
