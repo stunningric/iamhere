@@ -1779,3 +1779,31 @@ kubectl get pods --namespace=dev
 kubectl get pod -A  OR kubectl get pods --all-namespace --> All pods from all namespace
 kubectl config set-context $(kubectl config current-context) --namespace-dev
 
+
+SERVICE:::
+Service Tyoe : 
+NodePort
+ClusterIP
+LoadBalancer
+
+Nodeport:
+
+Application running in POD on 80 port --> Service will connect with POD 80 to Service pod 80 --> Node will connect with Node port (any port which is exposed)
+
+vim service-nodeport-defination.yml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service-meta
+spec:
+  type: NodePort
+  ports:
+    - targetPort: 80
+      port: 80
+      nodePort: 8080
+  selector:
+      app: myapp
+      type: front-end
+      
+
