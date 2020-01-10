@@ -1945,6 +1945,153 @@ spec:
       - name: nginx
         image: nginx
 	
-	
 
+Set Tolerations for pod -->
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bee
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  tolerations:
+  - key: "spray"
+    value: "mortein"
+    effect: "NoSchedule"
   
+Create POD with name "mosquito" and container name with "nginx"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mosquito
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+
+Remove taint from node
+kubectl taint nodes master node-role.kubernetes.io/master:NoSchedule-
+
+Example
+kubectl taint nodes node01 key=value:NoSchedule
+kubectl taint nodes node01 spray=mortein:NoSchedule
+
+Check Taint for node --> 
+kubectl describe node kubemaster | grep Taint
+
+Taint Effect Type :
+NoSchedule
+PreferNoSchedule
+NoExecute
+
+
+Node Selectors :::::
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mosquito
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  nodeSelector:
+    size: Large
+
+kubectl label nodes nodename label-key=label-value
+kubectl label nodes node1 size=Large
+    
+
+Node Affinity::::::
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mosquito
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  affinity:
+    nodeAffinity:
+       requiredDuringSchedulingIgnoredDuringExecution:
+           nodeSelectorTerms:
+           -  matchExpression:
+              - key: size
+                operator: In
+                value:
+                - Large
+                - Medium
+  
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mosquito
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  affinity:
+    nodeAffinity:
+       requiredDuringSchedulingIgnoredDuringExecution:
+           nodeSelectorTerms:
+           -  matchExpression:
+              - key: size
+                operator: NotIn
+                value:
+                - Small
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mosquito
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  affinity:
+    nodeAffinity:
+       requiredDuringSchedulingIgnoredDuringExecution:
+           nodeSelectorTerms:
+           -  matchExpression:
+              - key: size
+                operator: Exists
+		
+		
+Apply new label to Node
+kubectl label node node01 color=blue OR kubectl edit node node01   
+
+
+kubectl run blue --image=nginx --replica=6
+
+
+Set nodeAffinity :::::
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: red
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      run: nginx
+  template:
+    metadata:
+      labels:
+        run: nginx
+    spec:
+      containers:
+      - image: nginx
+        imagePullPolicy: Always
+        name: nginx
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/master
+                operator: Exists
