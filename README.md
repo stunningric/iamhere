@@ -1728,14 +1728,54 @@ spec:
        type: front-end
 
 Upgrade replica size from 3 to 6 
-Just update the yml file and execute "kubectl replace -f replicaset-defination.yml" OR "kubectl scale -replicas=6 -f replicaset-defination.yml"
+Just update the yml file and execute "kubectl replace -f replicaset-defination.yml" OR "kubectl scale -replicas=6 -f replicaset-defination.yml" 
+
+kubectl edit replicaset replicaname --> to change the in replicset parameters like replica or image
 
 kubectl get replicaset
 kubectl delete replicaset myapp-replicaset
 
 
+DEPLOYMENT :: 
+
+vim deployment-defination.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
 
 
+NAMESPACE :::
 
+How we can connect db from one NS to another NS.
 
+Local NS
+db-service
+Just put container name 
+
+Remote NS
+db-service.dev.svc.cluster.local
+ServerName(Container).NameSpace.Service(default by kubernetes).domainname(Default by kubernetes)
+
+kubectl create namespace dev
+kubectl get pods --namespace=dev
+kubectl get pod -A  OR kubectl get pods --all-namespace --> All pods from all namespace
+kubectl config set-context $(kubectl config current-context) --namespace-dev
 
