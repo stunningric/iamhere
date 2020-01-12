@@ -2140,3 +2140,73 @@ With Deployments you can easily edit any field/property of the POD template. Sin
 kubectl edit deployment my-deployment
 
 kubectl get pod podname -o yaml > elephant.yaml   --> generate yaml file from existing pod
+
+kubectl get events
+kubectl logs my-scheduler --name-space=kube-system
+
+
+Second Scheduler :
+
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    component: kube-scheduler
+    tier: control-plane
+  name: my-scheduler
+  namespace: kube-system
+spec:
+  containers:
+  - command:
+    - kube-scheduler
+    - --bind-address=127.0.0.1
+    - --port=10253
+    - --scheduler-name=my-scheduler
+    - --kubeconfig=/etc/kubernetes/scheduler.conf
+    - --leader-elect=false
+    image: k8s.gcr.io/kube-scheduler:v1.16.0
+    imagePullPolicy: IfNotPresent
+    livenessProbe:
+      failureThreshold: 8
+      httpGet:
+        host: 127.0.0.1
+        path: /healthz
+        port: 10253
+        scheme: HTTP
+      initialDelaySeconds: 15
+      timeoutSeconds: 15
+    name: kube-scheduler
+    resources:
+      requests:
+        cpu: 100m
+    volumeMounts:
+    - mountPath: /etc/kubernetes/scheduler.conf
+      name: kubeconfig
+      readOnly: true
+  hostNetwork: true
+  priorityClassName: system-cluster-critical
+  volumes:
+  - hostPath:
+      path: /etc/kubernetes/scheduler.conf
+      type: FileOrCreate
+    name: kubeconfig
+status: {}
+
+
+Run pod under newly create scheduler :
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  -  image: nginx
+     name: nginx
+  schedulerName: my-scheduler
+
+kubectl logs -f webapp-2 -c simple-webapp --> Check log of simple-webapp container inside the webapp pod
+
+kubectl logs -f webapp-1 --> Check the log
+
