@@ -2210,3 +2210,66 @@ kubectl logs -f webapp-2 -c simple-webapp --> Check log of simple-webapp contain
 
 kubectl logs -f webapp-1 --> Check the log
 
+kubectl rollout status deployment/deploymentname
+
+Deployment Strategy ::
+Recreate
+Rolling update
+
+
+kubectl apply -f deployment.yaml
+
+kubectl get replicasets
+
+kubectl rollout undo deployment/deployname
+
+
+kubectl run nginx --image=nginx --> create deployment
+
+Create ConfigMap ::::::
+
+Imperative way
+kubectl create configmap app-config --from-literal=APP_COLOR=blue --from-literal=APP_MOD=prod
+
+Declarative way 
+
+vim configmap.yaml 
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+   name: app-config
+data:
+   APP_COLOR: blue
+   APP_MODE: prod
+
+kubectl create -f configmap.yaml
+
+kubectl get configmaps  
+kubectl describe configmaps
+
+
+How to map configMap into Pods ::::::
+vim pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    name: webapp-color
+  name: webapp-color
+  selfLink: /api/v1/namespaces/default/pods/webapp-color
+spec:
+  containers:
+  - envFrom:
+    - configMapRef:
+        name: webapp-config-map
+    image: kodekloud/webapp-color
+    imagePullPolicy: Always
+    name: webapp-color
+
+kubectl create -f pod.yaml
+
+
+
+86
