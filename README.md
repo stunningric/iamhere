@@ -2270,6 +2270,121 @@ spec:
 
 kubectl create -f pod.yaml
 
+Secret :::::::::::::::::::::::::::::::::::::::;
+
+kubectl create secret generic app-secret --from-literal=DB_Host=mysql --from-literal=DB_User=root --from-literal=DB_Password=paswrd
+
+kubectl create -f 
+
+apiVersion: v1
+kind: Secret
+metadata:
+   name: app-secret
+data: 
+   DB_Host: mysql
+   DB_User: root
+   DB_Password: paswrd
 
 
-86
+Encrypt details with base 64
+
+echo -n "mysql" | base64
+echo -n "root" | base64
+echo -n "paswrd" | base64
+
+Decode
+
+echo -n "fddgsf==" | base64 --decode
+echo -n "frth==" | base64 --decode
+echo -n "bxdf==" | base64 --decode
+
+
+vim pod-with-secret.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2020-01-13T03:28:08Z"
+  labels:
+  name: webapp-pod
+  namespace: default
+spec:
+  containers:
+  - image: kodekloud/simple-webapp-mysql
+    name: webapp
+    envFrom:
+    - secretRef:
+        name: db-secret
+
+
+
+vim multi-container-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: yellow
+spec:
+  containers:
+  - name: lemon
+    image: busybox
+  - name: gold
+    image: redis
+
+initcontainer.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  labels:
+    app: myapp
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox:1.28
+    command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+  initContainers:
+  - name: init-myservice
+    image: busybox
+    command: ['sh', '-c', 'git clone <some-repository-that-will-be-used-by-application> ; done;']
+
+multi-initcontainer.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  labels:
+    app: myapp
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox:1.28
+    command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+  initContainers:
+  - name: init-myservice
+    image: busybox:1.28
+    command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
+  - name: init-mydb
+    image: busybox:1.28
+    command: ['sh', '-c', 'until nslookup mydb; do echo waiting for mydb; sleep 2; done;']
+
+
+
+Kubernets Upgrade OS 
+
+kubectl drain node-1 --> it will transfer running pod to another nodes
+
+kubectl uncordon node-1  --> put it back to cluster once maintance done.
+
+kubectl cordon node-2 --> Dont want to put on maintanance and dont want to host any further pod.
+
+Upgrade kubernetes ::::::
+apt-get upgrade -y kubeadm=1.12.0-00
+
+kubeadm upgrade apply v1.12.0
+
+kubectl get nodes
+
+apt-get upgrade -y kubelet=1.12.0-00
+
+systemctl restart kubelet
+
+kubectl get nodes 
