@@ -2388,3 +2388,44 @@ apt-get upgrade -y kubelet=1.12.0-00
 systemctl restart kubelet
 
 kubectl get nodes 
+
+
+kubectl drain node-1
+kubectl cordon node-2
+kubectl uncordon node-1
+
+kubectl run --generator=run-pod/v1 nginx-pod --image=nginx:alpine 
+
+Backup :::::::
+apiserver
+kubectl get all --all-namespaces -o yaml > all-deploy-services.yaml
+
+ETCD Cluster
+All ETCD commands required to mentioned below parameter
+
+--endpoints=https:etcdIP OR localhost:2379
+--cacert=/etc/etcd/ca/crt
+--cert=/etc/etcd/etcd-server.crt
+--key=/etc/etcd/etcd-server.key
+
+ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key snapshot save /tmp/snapshot-pre-boot.db
+
+
+restore ETCD
+
+ETCDCTL_API=3 etcdctl --endpoints=https://[127.0.0.1]:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+     --name=master \
+     --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key \
+     --data-dir /var/lib/etcd-from-backup \
+     --initial-cluster=master=https://127.0.0.1:2380 \
+     --initial-cluster-token etcd-cluster-1 \
+     --initial-advertise-peer-urls=https://127.0.0.1:2380 \
+     snapshot restore /tmp/snapshot-pre-boot.db
+
+service kube-spiserver stopped
+
+etcdctl snapshot restore backup.db 
+
+systemctl daemon-reload
+service etcd restart
+service kube-apiserver start
