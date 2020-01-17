@@ -2402,6 +2402,9 @@ apiserver
 kubectl get all --all-namespaces -o yaml > all-deploy-services.yaml
 
 ETCD Cluster
+
+ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key snapshot save /tmp/snapshot-pre-boot.db
+
 All ETCD commands required to mentioned below parameter
 
 --endpoints=https:etcdIP OR localhost:2379
@@ -2414,14 +2417,9 @@ ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernete
 
 restore ETCD
 
-ETCDCTL_API=3 etcdctl --endpoints=https://[127.0.0.1]:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt \
-     --name=master \
-     --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key \
-     --data-dir /var/lib/etcd-from-backup \
-     --initial-cluster=master=https://127.0.0.1:2380 \
-     --initial-cluster-token etcd-cluster-1 \
-     --initial-advertise-peer-urls=https://127.0.0.1:2380 \
-     snapshot restore /tmp/snapshot-pre-boot.db
+ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key snapshot restore /tmp/snapshot-pre-boot.db --name master --data-dir=/var/lib/etcd-from-backup --initial-cluster=master=https://127.0.0.1:2380 --initial-cluster-token=etcd-cluster-1 --initial-advertise-peer-urls=https://127.0.0.1:2380
+
+vim /etc/kubernetes/manifests/etcd.yaml --> update volume mount in this manifest file (3 location)
 
 service kube-spiserver stopped
 
