@@ -2546,3 +2546,14 @@ to verify :
 curl -v -k https://apiserverIP:6443/api/v1/pods --header "Authorization: Bearer token"
 
 
+Create Role ::
+
+kubectl create role developer --verb=create --verb=list --resource=pods
+
+Create RoleBinding ::
+kubectl create rolebinding dev-user-binding --role=developer --serviceaccount=namespace:default --user=dev-user
+
+How to store private username password for private image repo.
+
+kubectl create secret docker-registry registerycredentials --docker-server=private.url.com --docker-username=username --docker-password=pass --docker-email=email@gmail.com
+
