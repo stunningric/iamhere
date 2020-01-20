@@ -2557,3 +2557,20 @@ How to store private username password for private image repo.
 
 kubectl create secret docker-registry registerycredentials --docker-server=private.url.com --docker-username=username --docker-password=pass --docker-email=email@gmail.com
 
+PVClaim :::
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+    - name: myfrontend
+      image: nginx
+      volumeMounts:
+      - mountPath: "/var/www/html"
+        name: mypd
+  volumes:
+    - name: mypd
+      persistentVolumeClaim:
+        claimName: myclaim
