@@ -2649,3 +2649,7 @@ spec:
           serviceName: http-svc
           servicePort: 80
         path: /something(/|$)(.*)
+
+
+git clone https://github.com/kodekloudhub/kubernetes-metrics-server.git
+kubectl top 
