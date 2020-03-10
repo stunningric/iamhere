@@ -1,5 +1,6 @@
 **MySQL Backup only schema and data**
-```
+
+`
 mysqldump -u root -p --no-create-info dbname tablename1 tablename2 > data.sql     ------------ only DATA
 
 mysqldump -u root -p --no-data dbname tablename1 tablename2 > schema.sql   ------------ only SCHEME
@@ -2653,3 +2654,38 @@ spec:
 
 git clone https://github.com/kodekloudhub/kubernetes-metrics-server.git
 kubectl top 
+
+
+
+
+
+```
+**Ansible**
+```
+
+# Sample Inventory File
+
+web1 ansible_host=server1.company.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Password123!
+web2 ansible_host=server2.company.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Password123!
+web3 ansible_host=server3.company.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Password123!
+db1 ansible_host=server4.company.com ansible_connection=winrm ansible_user=administrator ansible_password=Password123!
+
+
+
+# Sample Inventory File
+
+# Web Servers
+web1 ansible_host=server1.company.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Password123!
+web2 ansible_host=server2.company.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Password123!
+web3 ansible_host=server3.company.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Password123!
+
+# Database Servers
+db1 ansible_host=server4.company.com ansible_connection=winrm ansible_user=administrator ansible_password=Password123!
+
+[web_servers]
+web1
+web2
+web3
+
+[db_servers]
+db1
