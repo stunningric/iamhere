@@ -2749,3 +2749,96 @@ web_node3
 [us_nodes:children]
 boston_nodes
 dallas_nodes
+
+
+ansible <hosts> -a <command>
+ansible all -a "/sbin/reboot"
+ansible <hosts> -m <module>
+ansible target -m ping
+
+
+playbook.yaml
+-
+  name: Test ping
+  hosts: all
+  tasks:
+    - name: ping test
+  ping:  
+
+
+copyfile playbook.yaml
+-
+  name: Copy file to target servers
+  hosts: all
+  tasks:
+    - name: Copy file
+      copy:
+        src: /tmp/java.war
+        dest: /tmp/java.war
+
+
+2Task.yaml
+  -
+      name: 'Execute two commands on localhost'
+      hosts: web_node1
+      tasks:
+          -
+              name: 'Execute a date command'
+              command: date
+          -
+              name: 'Execute a command to display hosts file'
+              command: 'cat /etc/hosts'
+
+
+Separate task for 2 hosts or Groups.yaml
+-
+    name: 'Execute command to display date on web_node1'
+    hosts: web_node1
+    tasks:
+        -
+            name: 'Execute a date command'
+            command: date
+-
+    name: 'Executeacommandtodisplayhostsfilecontentsonweb_node2'
+    hosts: web_node2
+    tasks:
+        -
+            name: ' Executeacommandtodisplayhostsfile'
+            command: cat /etc/hosts
+
+Many task for diff group.yaml
+-
+    name: 'Stop the web services on web server nodes'
+    hosts: web_nodes
+    tasks:
+        -
+            name: 'Stop the web services on web server nodes'
+            command: 'service httpd stop'
+-
+    name: 'Shutdown the database services on db server nodes'
+    hosts: db_nodes
+    tasks:
+        -
+            name: 'Shutdown the database services on db server nodes'
+            command: 'service mysql stop'            
+-
+    name: 'Restart all servers (web and db) at once'
+    hosts: all_nodes
+    tasks:
+        -
+            name: 'Restart all servers (web and db) at once'
+            command: '/sbin/shutdown -r'
+-
+    name: 'Start the database services on db server nodes'
+    hosts: db_nodes
+    tasks:
+        -
+            name: 'Start the database services on db server nodes'
+            command: 'service mysql start'
+-
+    name: 'Start the web services on web server nodes'
+    hosts: web_nodes
+    tasks:
+        -
+            name: 'Start the web services on web server nodes'
+            command: 'service httpd start'
