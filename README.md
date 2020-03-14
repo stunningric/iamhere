@@ -3133,18 +3133,20 @@ Change value in file after checking output.yaml
             
 ---------------------------------------------
 Create multiple user inLoop.yaml
+
 -
   name: Create Users
   hosts: localhost
-  tasks: 
-    - user: name='{{item}}'   state=present
-      loop:
+  tasks:
+    - user:
+        name: "{{item}}"
+        state: present
+      with_items:
         - user1
         - user2
         - user3
         - user4
         - user5
-
 
 -
   name: Create Users
