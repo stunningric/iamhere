@@ -2851,3 +2851,352 @@ Add new Value in file playbookresolv.yaml
     - lineinfile:
         path: /etc/resolv.conf
         line: 'nameserver 10.1.250.10'
+
+-
+  name: Add NDS server to resolv.conf
+  hosts: all
+  tasks:
+    - lineinfile:
+        path: /etc/resolv.conf
+        line: 'nameserver 10.1.250.10'
+
+
+Script and Service Module.yaml
+-
+    name: 'Execute a script on all web server nodes'
+    hosts: web_nodes
+    tasks:
+        -
+            name: 'Execute a script on all web server nodes'
+            script: /tmp/install_script.sh
+        
+        -   name: 'starthttpdservices'
+            service: 
+              name: httpd
+              state: started
+
+Script and Service and lineinfile Module.yaml
+-
+    name: 'Execute a script on all web server nodes'
+    hosts: web_nodes
+    tasks:
+        -   name: 'add an entry into resolv.conf'
+            lineinfile: 
+              path: /etc/resolv.conf
+              line: 'nameserver 10.1.250.10'
+        -
+            name: 'Execute a script'
+            script: /tmp/install_script.sh
+        -
+            name: 'Start httpd service'
+            service:
+                name: httpd
+                state: present
+
+
+Script, Service,lineinfile and user Module.yaml
+
+-
+    name: 'Execute a script on all web server nodes and start httpd service'
+    hosts: web_nodes
+    tasks:
+        -
+            name: 'Update entry into /etc/resolv.conf'
+            lineinfile:
+                path: /etc/resolv.conf
+                line: 'nameserver 10.1.250.10'
+        -
+            name: 'add user'
+            user: 
+              name: web_user
+              uid: 1040
+              group: developers
+        -
+            name: 'Execute a script'
+            script: /tmp/install_script.sh
+        -
+            name: 'Start httpd service'
+            service:
+                name: httpd
+                state: present
+
+
+Variables
+
+playbook-variable.yaml
+-
+  name: Add NDS server to resolv.conf
+  hosts: all
+  vars:
+    dns_server: 10.1.250.10
+  tasks:
+    - lineinfile:
+        path: /etc/resolv.conf
+        line: 'nameserver {{ dns_server}}'
+
+---------------------------------------------
+playbook-firewalld.yaml with Variable from other file web.yaml
+- 
+  name: Set firewall configurations
+  hosts: web
+  tasks: 
+  - firewalls:
+      service: https
+      permanent: true
+      state: enabled
+  - firewalld:
+      port: '{{ http_port }}'/tcp
+      permanent: true
+      state: disbaled
+  - firewalld:
+      port: '{{ http_port }}'/udp
+      permanent: true
+      state: disbaled
+  - firewalld:
+      source: '{{ interal_ip_range }}'/24
+      Zone: internal
+      state: enabled
+
+web.yaml
+http_port: 8081
+snmp_port: 161-162
+interal_ip_range: 192.0.2.0
+---------------------------------------------
+variable from inventory file.yaml
+nameserverchange.yaml
+-
+    name: 'Update nameserver entry into resolv.conf file on localhost'
+    hosts: localhost
+    tasks:
+        -
+            name: 'Update nameserver entry into resolv.conf file'
+            lineinfile:
+                path: /etc/resolv.conf
+                line: 'nameserver {{ nameserver_ip }}'
+
+inventory.txt
+# Sample Inventory File
+
+localhost ansible_connection=localhost nameserver_ip=10.1.250.10
+---------------------------------------------
+update nameserver and disable snmpport.yaml
+-
+    name: 'Update nameserver entry into resolv.conf file on localhost'
+    hosts: localhost
+    tasks:
+        -
+            name: 'Update nameserver entry into resolv.conf file'
+            lineinfile:
+                path: /etc/resolv.conf
+                line: 'nameserver {{ nameserver_ip }}'
+        -
+            name: 'Disable SNMP Port'
+            firewalld:
+                port: '{{ snmp_port }}'
+                permanent: true
+                state: disabled
+
+inventory.yaml
+# Sample Inventory File
+
+localhost ansible_connection=localhost nameserver_ip=10.1.250.10 snmp_port=160-161
+---------------------------------------------
+Variable inside the playbook.yaml
+-
+    name: 'Update nameserver entry into resolv.conf file on localhost'
+    hosts: localhost
+    vars:
+      car_model: BMW M3
+      country_name: USA
+      title: Systems Engineer
+    tasks:
+        -
+            name: 'Print my car model'
+            command: 'echo "My car''s model is {{ car_model }}"'
+        -
+            name: 'Print my country'
+            command: 'echo "I live in the {{ country_name }}"'
+        -
+            name: 'Print my title'
+            command: 'echo "I work as a {{ title }}"'
+
+---------------------------------------------
+Install packages into Server
+
+this is for ubuntu.yaml
+---
+- name: install nginx
+  hosts: web1
+  tasks: 
+  - name: install nginx
+    apt: 
+      name: nginx
+      state: present
+
+this is for centos.yaml
+---
+- name: install nginx
+  hosts: web1
+  tasks: 
+  - name: install nginx
+    yum: 
+      name: nginx
+      state: present
+
+Conditional package install.yaml
+---
+- name: install nginx
+  hosts: web1
+  tasks: 
+  - name: install nginx
+    apt: 
+      name: nginx
+      state: present
+    when: ansible_os_family == "Debian"
+          ansible_distribution_version == "16.04"
+
+  - name: install nginx
+    yum: 
+      name: nginx
+      state: present
+    when: ansible_os_family == "RedHat" or
+          ansible_os_family == "SUSE"
+---------------------------------------------
+Conditional package install with loop.yaml
+
+---
+- name: Install Softwares
+  hosts: all
+  vars: 
+    packages:
+      - name: nginx
+        required: true
+      - name: mysql
+        required: true
+      - name: apache
+        required: False
+   tasks: 
+   - name: Install "{{ item.name }}" on debian
+     apt:
+       name: "{{ item.name}}"
+       state: present
+     when: item.required == True
+     loop:  "{{ packages}}"
+---------------------------------------------
+Conditionas and result.yaml
+- name: check status of service and email if its down
+  hosts: localhost
+  tasks: 
+    - command: service httpd status
+      register: result
+
+    - mail:
+        to: r.c@gmail.com
+        subject: service alert
+        body: httpd service is down
+        when: result.stdout.find('down') != -1
+---------------------------------------------
+when condition if hostname.yaml
+-
+    name: 'Execute a script on all web server nodes'
+    hosts: all_servers
+    tasks:
+        -
+            service: 'name=mysql state=started'
+            when: ansible_host == "server4.company.com"
+
+Variable.yaml
+-
+    name: 'Am I an Adult or a Child?'
+    hosts: localhost
+    vars:
+        age: 25
+    tasks:
+        -
+            command: 'echo "I am a Child"'
+            when: 'age < 18'
+        -
+            command: 'echo "I am an Adult"'
+            when: 'age >= 18'
+
+Change value in file after checking output.yaml
+-
+    name: 'Add name server entry if not already entered'
+    hosts: localhost
+    tasks:
+        -
+            shell: 'cat /etc/resolv.conf'
+            register: command_output
+        -
+            shell: 'echo "nameserver 10.0.250.10" >> /etc/resolv.conf'
+            when: "command_output.stdout.find(\"10.0.250.10\")==-1"
+            
+---------------------------------------------
+Create multiple user inLoop.yaml
+-
+  name: Create Users
+  hosts: localhost
+  tasks: 
+    - user: name='{{item}}'   state=present
+      loop:
+        - user1
+        - user2
+        - user3
+        - user4
+        - user5
+
+
+-
+  name: Create Users
+  hosts: localhost
+  tasks: 
+    - user: name='{{item.name}}'   state=present uid='{{item.uid}}'
+      loop:
+        - name: user1
+          uid: 1010
+        - user2
+          uid: 1020
+        - user3
+          uid: 1030
+        - user4
+          uid: 1040
+        - user5
+          uid: 1050
+
+Print fruit name with loop and variable.yaml
+-
+    name: 'Print list of fruits'
+    hosts: localhost
+    vars:
+        fruits:
+            - Apple
+            - Banana
+            - Grapes
+            - Orange
+    tasks:
+        -
+            command: "echo\"{{item}}\""  with_items: "{{fruits}}"
+
+install packages with loop.yaml
+-
+    name: 'Install required packages'
+    hosts: localhost
+    vars:
+        packages:
+            - httpd
+            - binutils
+            - glibc
+            - ksh
+            - libaio
+            - libXext
+            - gcc
+            - make
+            - sysstat
+            - unixODBC
+            - mongodb
+            - nodejs
+            - grunt
+    tasks:
+        -
+              with_items: "{{packages}}" yum: 'name={{item}} state=present'
+
