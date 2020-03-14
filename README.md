@@ -2842,3 +2842,12 @@ Many task for diff group.yaml
         -
             name: 'Start the web services on web server nodes'
             command: 'service httpd start'
+
+Add new Value in file playbookresolv.yaml
+-
+  name: Add NDS server to resolv.conf
+  hosts: all
+  tasks:
+    - lineinfile:
+        path: /etc/resolv.conf
+        line: 'nameserver 10.1.250.10'
