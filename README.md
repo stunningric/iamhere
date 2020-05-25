@@ -1881,7 +1881,7 @@ spec:
 ```
 
 NAMESPACE :::
-```
+
 How we can connect db from one NS to another NS.
 ```
 Local NS
