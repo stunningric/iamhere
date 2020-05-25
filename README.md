@@ -2046,7 +2046,7 @@ kubectl scale deployment/webapp --replicas=3 --> The scale the webapp to 3 using
 ```
 kubectl expose deployment webapp --type=NodePort --port=8080 --name=webapp-service --dry-run -o yaml > webapp-service.yaml --> to generate a service definition file. Then edit the nodeport in it and create a service.
 ```
-```
+
 
 ------------------------- If scheduler not available-------------------
 Need to add nodeNade parameter for assigning node manually
