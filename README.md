@@ -124,13 +124,14 @@ MongoDB Database backup done and Database files copied to S3 bucket below is the
 EOF
 ```
 
-### Delete files older than 3 Days ###
+# Delete files older than 3 Days 
+```
 find /home/ubuntu/mongodbbackup/* -mtime +5 -exec rm -rf {} \;
-
+```
 
  
 # Upload to S3
-
+```
 #S3_BUCKET_NAME="server-mongodb-backup" #replace with your bucket name on Amazon S3
 #S3_BUCKET_PATH=""
 
@@ -140,7 +141,7 @@ find /home/ubuntu/mongodbbackup/* -mtime +5 -exec rm -rf {} \;
 #Unlock database writes
 #mongo admin --eval "printjson(db.fsyncUnlock())"
 ```
-**MySQL Backup Script**
+# MySQL Backup Script
 ```
 #!/bin/bash
  
@@ -160,7 +161,8 @@ for db in $databases; do
     fi
 done
 ```
-**Apache script for check uptime**
+
+# Apache script for check uptime
 ```
 #!/bin/sh
 SERVICE='apache2'
@@ -184,9 +186,9 @@ echo "Apache Server is stopped and cannot be started!!! @ "$date $time" " | mail
 #    echo "$SERVICE is not running!" | mail -s "$SERVICE down" root
 fi
 fi
-
 ```
-**Check MySQL running or not | BASH Script**
+
+# Check MySQL running or not | BASH Script
 ```
 <?php
 $servername = "localhost";
@@ -203,7 +205,8 @@ if ($conn->connect_error) {
 echo "Connected successfully";
 ?>
 ```
-**Gitpull Script**
+
+# Gitpull Script
 ```
 #!/bin/sh
 time="$(date +"%R")"
@@ -223,41 +226,37 @@ s3cmd sync "/home/ubuntu/deploy/public/img/" "s3://bucketname/img/" --add-header
 # Delete old log files
 cd /home/ubuntu/script/gitlogs/
 find /home/ubuntu/script/gitlogs/* -mtime +10 -exec rm -rf {} \;
-
+```
+```
 ------>>>>     Crontab <<<<-------
 
-
- 
 Set crontab for reboot 
 @reboot sh /home/ubuntu/script/gitpull.sh
-
 ```
-**Assign apache group to your user**
+
+# Assign apache group to your user
 ```
 usermod -g www-data ubuntu
 ```
-**Find Command**
+
+# Find Command
 ```
 find /var/www/ -size  +512M -exec du -sh {} \;
 find /var/www/ ! -name "*.jpg" -size +10M -exec du -sh {} \;
 ```
-**Tomcat VirtualHOST with JAVA variable**
+
+# Tomcat VirtualHOST with JAVA variable
 ```
 </Host>
          <Host name="www.rakesh.com"  appBase="webapps/rakesh"
             unpackWARs="true" autoDeploy="true">
         <Context path="" docBase="/var/lib/tomcat8/webapps/rakesh"/>
         </Host>
-
-
-
+	
 JAVA_HOME=/usr/local/java/jdk1.8.0_121
 PATH=$PATH:$JRE_HOME/bin:$JAVA_HOME/bin
 export JAVA_HOME
 export PATH
-        
-
-
         sudo update-alternatives --install "/usr/bin/java" "java" "/usr/local/java/jdk1.8.0_121/bin/java" 1 
         sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/local/java/jdk1.8.0_121/bin/javac" 1
         sudo update-alternatives --install "/usr/bin/javaws" "javaws" "/usr/local/java/jdk1.8.0_121/bin/javaws" 1
@@ -274,7 +273,8 @@ http://thelinuxfaq.com/191-how-to-set-or-increase-memory-heap-size-in-apache-tom
 https://tecadmin.net/configure-ssl-certificate-in-tomcat/
 https://tomcat.apache.org/tomcat-8.0-doc/ssl-howto.html
 ```
-**Install LetsEncrypt SSL in Apache Tomcat**
+
+# Install LetsEncrypt SSL in Apache Tomcat
 ```
 Generate keystore file 
 
@@ -299,11 +299,7 @@ cd /var/git/letsencrypt
 git pull origin master
 
 
-
-
 ./letsencrypt-auto certonly --standalone --agree-tos --rsa-key-size 4096 -d $mydomain --standalone-supported-challenges http-01 --http-01-port 80 --renew-by-default --email $myemail --renew-by-default 
-
-
 
 
 $keytooldir/keytool -delete -alias root -storepass googlecom -keystore $keystoredir
@@ -316,7 +312,8 @@ openssl pkcs12 -export -in $certdir/fullchain.pem -inkey $certdir/privkey.pem -o
 $keytooldir/keytool -importkeystore -srcstorepass aaa -deststorepass googlecom -destkeypass googlecom -srckeystore $certdir/cert_and_key.p12 -srcstoretype PKCS12 -alias tomcat -keystore $keystoredir
 $keytooldir/keytool -import -trustcacerts -alias root -deststorepass googlecom -file $certdir/chain.pem -noprompt -keystore $keystoredir
 ```
-**Backup CODEBASE with 3 days retation and upload to S3 Bucket**
+
+# Backup CODEBASE with 3 days retation and upload to S3 Bucket
 ```
 #!bin/bash
 #Create Variables.
@@ -363,55 +360,80 @@ EOF
 # Delete files older than 7 Days
 find /home/ubuntu/wwwbackup/* -mtime +1 -exec rm -f {} \;
 ```
-**SSH Tunnel**
+
+# SSH Tunnel
 ```
 ssh -C -L 3306:remote.mysql.com:3306 -i myaws.pem ubuntu@remoteserver
 ```
-**SET JAVA_HOME**
+
+# SET JAVA_HOME
 ```
 export JAVA_HOME=/usr/local/jdk
 export PATH=$PATH:$JAVA_HOME/bin
 export JAVA_OPTS="-Xms128m -Xmx512m"
 ```
-**Install JAVA in Ubuntu **
+
+# Install JAVA in Ubuntu 
 ```
 Introduction
 As a lot of articles and programs require to have Java installed, this article will guide you through the process of installing and managing different versions of Java.
 Installing default JRE/JDK
 This is the recommended and easiest option. This will install OpenJDK 6 on Ubuntu 12.04 and earlier and on 12.10+ it will install OpenJDK 7.
 Installing Java with apt-get is easy. First, update the package index:
+
 sudo apt-get update
+
 Then, check if Java is not already installed:
+
 java -version
-If it returns "The program java can be found in the following packages", Java hasn't been installed yet, so execute the following command:
+
+If it returns "The program java can be found in the following packages", Java hasn't been installed yet, so execute the following 
+command:
+
 sudo apt-get install default-jre
+
 This will install the Java Runtime Environment (JRE). If you instead need the Java Development Kit (JDK), which is usually needed to compile Java applications (for exampleApache Ant, Apache Maven, Eclipse and IntelliJ IDEA execute the following command:
+
 sudo apt-get install default-jdk
+
 That is everything that is needed to install Java.
 All other steps are optional and must only be executed when needed.
 Installing OpenJDK 7 (optional)
 To install OpenJDK 7, execute the following command:
+
 sudo apt-get install openjdk-7-jre 
+
 This will install the Java Runtime Environment (JRE). If you instead need the Java Development Kit (JDK), execute the following command:
+
 sudo apt-get install openjdk-7-jdk
 Installing Oracle JDK (optional)
 The Oracle JDK is the official JDK; however, it is no longer provided by Oracle as a default installation for Ubuntu.
 You can still install it using apt-get. To install any version, first execute the following commands:
+
 sudo apt-get install python-software-properties
+
 sudo add-apt-repository ppa:webupd8team/java
+
 sudo apt-get update
+
 Then, depending on the version you want to install, execute one of the following commands:
 Oracle JDK 6
 This is an old version but still in use.
+
 sudo apt-get install oracle-java6-installer
+
 Oracle JDK 7
 This is the latest stable version.
+
 sudo apt-get install oracle-java7-installer
+
 Oracle JDK 8
 This is a developer preview, the general release is scheduled for March 2014. This external article about Java 8 may help you to understand what it's all about.
+
 sudo apt-get install oracle-java8-installer
 Managing Java (optional)
 When there are multiple Java installations on your Droplet, the Java version to use as default can be chosen. To do this, execute the following command:
+
 sudo update-alternatives --config java
 It will usually return something like this if you have 2 installations (if you have more, it will of course return more):
 There are 2 choices for the alternative java (providing /usr/bin/java).
@@ -424,11 +446,15 @@ Selection    Path                                            Priority   Status
 
 Press enter to keep the current choice[*], or type selection number:
 You can now choose the number to use as default. This can also be done for the Java compiler (javac):
+
 sudo update-alternatives --config javac
+
 It is the same selection screen as the previous command and should be used in the same way. This command can be executed for all other commands which have different installations. In Java, this includes but is not limited to: keytool, javadoc and jarsigner.
 Setting the "JAVA_HOME" environment variable
 To set the JAVA_HOME environment variable, which is needed for some programs, first find out the path of your Java installation:
+
 sudo update-alternatives --config java
+
 It returns something like:
 There are 2 choices for the alternative java (providing /usr/bin/java).
 
@@ -440,20 +466,27 @@ Selection    Path                                            Priority   Status
 
 Press enter to keep the current choice[*], or type selection number:
 The path of the installation is for each:
+
 /usr/lib/jvm/java-7-oracle
 /usr/lib/jvm/java-6-openjdk-amd64
 /usr/lib/jvm/java-7-oracle
+
 Copy the path from your preferred installation and then edit the file /etc/environment:
+
 sudo nano /etc/environment
+
 In this file, add the following line (replacing YOUR_PATH by the just copied path):
+
 JAVA_HOME="YOUR_PATH"
+
 That should be enough to set the environment variable. Now reload this file:
 source /etc/environment
 Test it by executing:
 echo $JAVA_HOME
 If it returns the just set path, the environment variable has been set successfully. If it doesn't, please make sure you followed all steps correctly.
 ```
-**Check IP of Instances behind ELB**
+
+# Check IP of Instances behind ELB
 ```
 <?php
 exec('aws elb describe-instance-health --load-balancer-name benefit |grep "InstanceId"', $out);
@@ -479,7 +512,8 @@ print_r($arr);
 die;
 ?>
 ```
-**GIT Basic Command**
+
+# GIT Basic Command
 ```
 git clone https://github.com/stunningric/testrepo.git
 nano index.php
@@ -492,7 +526,8 @@ Create Remote branch
 git branch dev
 git push origin dev
 ```
-**S3 Policy**
+
+# S3 Policy
 ```
 --------------------------------------------------------------------------------------------------------
 BUCKET POLICY in S3 PERMISSION
@@ -602,14 +637,16 @@ IAM
 	]
 }
 ```
-**Screen Help**
+
+# Screen Help
 ```
 screen -ls						#Check screen
 screen -r screenno.					#Attach screen	
 Ctrl+ad							#Dettach screen
 screen -X -S screenno. quit				#Quit screen 
 ```
-**Apache config file in Linux Distro**
+
+# Apache config file in Linux Distro
 ```
 ServerRoot              ::      /etc/httpd
 Primary Config Fle      ::      /etc/httpd/conf/httpd.conf
@@ -659,11 +696,13 @@ binary                  ::      /usr/sbin/httpd
 start/stop              ::      /sbin/service httpd
 {start|stop|restart|reload|graceful|condreload|closelogs|update|condrestart|status|extendedstatus|configtest|configtest_vhosts|semcleanrestart|debug|show_defines}
 ```
-**Check DB Size MySQL**
+
+# Check DB Size MySQL
 ```
 SELECT table_schemaTABLENAME, sum( data_length + index_length ) / 1024 / 1024 "Data Base Size in MB",sum( data_free )/ 1024 / 1024 "Free Space in MB" FROM information_schema.TABLES GROUP BY table_schema ;
 ```
-**Setup SSL Certificate in Apache**
+
+# Setup SSL Certificate in Apache
 ```
 <VirtualHost *:443>
         ServerName www.domainname.com
@@ -684,11 +723,13 @@ SSLCertificateChainFile /etc/ssl/domainname/gd-bundle-ca.crt
 # vim: syntax=apache ts=4 sw=4 sts=4 sr noet
 Header set Access-Control-Allow-Origin "*"
 ```
-**Install AWS ELB SSL Certificate**
+
+# Install AWS ELB SSL Certificate
 ```
 aws iam upload-server-certificate --server-certificate-name certificate2017 --certificate-body file://domainname.crt --private-key file://domainname.com.key --certificate-chain file://IntermediateCA.crt --path /cloudfront/certificate/
 ```
-**Interactive Mysql create user for existing db**
+
+# Interactive Mysql create user for existing db
 ```
 #!/bin/bash
 BKDIR=/home/username/mysqltest
@@ -737,7 +778,8 @@ else
 echo "The Database: $dbname does not exist, please specify a database that exists";
 fi
 ```
-**Apache Installation with basic configuration**
+
+# Apache Installation with basic configuration
 ```
 -----------------------------------------BASH SCRIPT FOR INSTALLATION------------------------------------
 #!/bin/bash
@@ -807,7 +849,8 @@ sudo a2enmod headers expires rewrite vhost_alias
 </VirtualHost>
 # vim: syntax=apache ts=4 sw=4 sts=4 sr noet
 ```
-**MySQL backup and upload to S3 Bucket**
+
+# MySQL backup and upload to S3 Bucket
 ```
 #!bin/bash
 #Create Variables.
@@ -865,7 +908,8 @@ echo "Backup Done SucessFully"
 ### Delete files older than 3 Days ###
 find /root/backup/mysql_db/* -mtime +3 -exec rm -rf {} \;
 ```
-**Check MongoDB connection with PHP**
+
+# Check MongoDB connection with PHP
 ```
 <?php
 //$server = "mongodb://username:password@localhost:27017/dbname";
@@ -879,7 +923,8 @@ else
     echo "Connection failed";
  ?>
  ```
-**Check Mail without Authentication with Sendmail Package**
+ 
+# Check Mail without Authentication with Sendmail Package
 ```
 <?php
  $to = "rchauhan@theitideas.com";
@@ -893,7 +938,8 @@ else
   }
  ?>
  ```
-**Check Mail with Authentication**
+ 
+# Check Mail with Authentication
 ```
 <?php
 require_once "Mail.php";
@@ -970,7 +1016,8 @@ if(!$mail->Send())
 
 // You may delete or alter these last lines reporting error messages, but beware, that if you delete the $mail->Send() part, the e-mail will not be sent, because that is the part of this code, that actually sends the e-mail
 ```
-**Check MemCache with PHP**
+
+# Check MemCache with PHP
 ```
 <?php
 $mc = new Memcached();
@@ -986,11 +1033,13 @@ if($result) {
 }
 ?>
 ```
-**compress file with bzip recursively.**
+
+# compress file with bzip recursively
 ```
 "find . -type f -exec bzip2 {} +"
 ```
-**IP TABLES**
+
+# IP TABLES
 ```
 sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT   :: not disconnect current ssh connection
 sudo iptables -A INPUT -i lo -j ACCEPT
@@ -998,7 +1047,8 @@ sudo iptables -A OUTPUT -o lo -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 ```
-**Check MySQL Connection with PHP**
+
+# Check MySQL Connection with PHP
 ```
 <?php
 $servername = "IP OR DOMAIN NAME";
@@ -1017,12 +1067,14 @@ if ($conn->connect_error) {
 echo "Connected successfully";
 ?> 
 ```
-**Kill remote SSH user**
+
+# Kill remote SSH user
 ```
 pkill -9 -t pts/0 
 pkill -9 -t "tty id" you can find tty id with "w" command or "tty" to find your ssh session tty id  
 ```
-**PHPINFO**
+
+# PHPINFO
 ```
 <?php
 echo "<br>";
@@ -1038,13 +1090,15 @@ echo "<br>";
 phpinfo();
 ?>
 ```
-**Check particular line number in big file and comment particular line in file**
+
+# Check particular line number in big file and comment particular line in file
 ```
 sed '5971 {s/^/#/}' bigfilename.sql > commentbigfilename-new.sql      #comment line number
 
 head -5971 coomentbigfilename.sql | tail -1                           # check commented line number
 ```
-**Sample NODEJS App**
+
+# Sample NODEJS App
 ```
 After install node
 # mkdir myweb && cd myweb
@@ -1064,32 +1118,31 @@ app.listen(3000, function () {
 
 # node index.js
 ```
-**Mongodb drop database**
+
+# Mongodb drop database
 ```
 mongo dbname --eval "db.dropDatabase()"
-
 ```
-**Mongodb restore database**
+# Mongodb restore database
 ```
 mongorestore --db dbname --verbose /home/ec2-user/MongodbBackup/mongodb-localhost-2018-03-06-1003 ---BSON JSON file path
-
 ```
-**Mongodb backup database**
+# Mongodb backup database
 ```
 mongodump -h localhost:27017 -d dbname
-
 ```
-**rethinkdb backup database**
+
+# rethinkdb backup database
 ```
 rethinkdb dump -c localhost:28015 -e dbname -f dbbackupname.tar.gz
-
 ```
-**Change Webmin root password**
+
+# Change Webmin root password
 ```
 sudo /usr/libexec/webmin/changepass.pl /etc/webmin root NewPAssword
-
 ```
-**Restore / Backup in AWS RDS MSSQL**
+
+# Restore / Backup in AWS RDS MSSQL
 ```
 1) Create bucket for store restore and backup file.
 2) Create custome "Option Group" for RDS Instance.
@@ -1115,12 +1168,13 @@ exec msdb.dbo.rds_backup_database
         @type='FULL';
 
 ```
-**Install Lamp in AWS Amazon Image**
+
+# Install Lamp in AWS Amazon Image
 ```
 https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-lamp-amazon-linux-2.html
-
 ```
-**Clear RAM Memory Cache, Buffer and Swap Space on Linux**
+
+# Clear RAM Memory Cache, Buffer and Swap Space on Linux
 ```
 Every Linux System has three options to clear cache without interrupting any processes or services.
 
@@ -1130,9 +1184,9 @@ sync; echo 1 > /proc/sys/vm/drop_caches
 sync; echo 2 > /proc/sys/vm/drop_caches
 3. Clear PageCache, dentries and inodes
 sync; echo 3 > /proc/sys/vm/drop_caches 
-
 ```
-**Jenkins CI**
+
+# Jenkins CI
 ```
 After installation of Jenkins, Login into jenkins user and create SSH key for passwordless login 
 "ssh-keygen -t rsa"
@@ -1142,9 +1196,9 @@ Now, Put public key contents "id_rsa.pub" into remote server's user "authorized_
 ssh -T user@serverip <<EOF
  sudo yum install httpd -y
 EOF
-
 ```
-**Sendmail funcion with AWS SES**
+
+# Sendmail funcion with AWS SES
 ```
 Ref : http://www.techoism.com/send-email-using-php-script-with-amazon-smtp-authentication/
 
@@ -1165,10 +1219,9 @@ Once done open index.php file and add To Address for email sending.
 1 ) $to = "rakesh.chauhan@theitideas.com";
 
 Once done, Check open index.php, It will send email from SES to your receipt email id with mentioned From email id.
-
-
 ```
-Ansible 
+
+# Ansible 
 ```
 ####Sample inventoryfile with private key
 [server]
