@@ -2383,7 +2383,6 @@ Rolling update
 
 kubectl apply -f deployment.yaml
 ```
-```
 kubectl get replicasets
 ```
 ```
