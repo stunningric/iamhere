@@ -1494,7 +1494,7 @@ Get Instances ID from Instance Name AWS
 for i in `cat myserver.txt`; do aws ec2 describe-instances --filters "Name=tag:Name,Values=$i" --query "Reservations[].Instances[].{Instance:InstanceId}"  --region eu-west-1 --output text
 ```
 
-# install java manually
+# Install java manually
 ```
 After download .tag.gz file 
 cd /usr/lib
@@ -1512,18 +1512,17 @@ update-alternatives --set javac /usr/lib/java/bin/javac
 update-alternatives --list java
 update-alternatives --list javac
 java -version
-
 ```
-Regular Expressions and Grep
+
+# Regular Expressions and Grep
 ```
 ^	  Match the beginning of the String
 $	  Match the end of the String
 *	  Match zero or more characters
 ?	  Match exactly one character
-
-
 ```
-Docker Cheatsheet
+
+# Docker Cheatsheet
 ```
 docker run ngnix --> Download and start image
 docker ps --> List all running docker container
@@ -1543,9 +1542,11 @@ docker run -v /opt/mydata:/var/lib/mysql mysql -> it will map local volume to co
 docker inspect containerid --> For more details for container
 docker logs containerid --> for logs
 docker build -t webapp-color:lite . --> Build image from dockerfile
-docker run --name db -e POSTGRES_PASSWORD=mysecretpassword -d postgres  --> pass environment 
+docker run --name db -e POSTGRES_PASSWORD=mysecretpassword -d postgres  --> pass environment \
+```
 
 CMD vs ENTRYPOINT  ::::
+```
 CMD = will run the command from dockerfile
 ENTRYPOINT = we can put into dockerfile and pass the input while launching/run docker
 If someone not provide the ENTRYPOINT input then we have to put both commands into dockerfile, CMD and ENTRYPOINT like below.
@@ -1553,12 +1554,13 @@ FROM ubuntu
 ENTRYPOINT ["sleep"]
 CMD ["5"]
 So, when user not provide ENTRYPOINT input it will take bydefault 5 because we have given 5 in CMD command
-
+```
 dokcer run -d --name mysql mysql
 docker run -d --name nginx -p 80:80 --link db:mysql nginx
 --link --> will create link and make host entry into host file to connect mysql database in mysql container
 
 DOCKER-COMPOSE ::::
+```
 We can use docker-compose to create all containers with once and linked and mapped all ports
 
 Like :
@@ -1604,20 +1606,21 @@ nginx:
 networks: 
   frontend:
   backend:
-
+```
 
 YAML:::: MUST have same Spaces everywhere
-
+```
 KEY-Pair Value 
-
+```
 Key: Value
 Fruit: Apple
 Vegetable: Carrot
 Liquid: Water
 Meat: Chicken
-
+```
 
 Array/ Lists
+```
 Fruits: 
 - Orange
 - Apple
@@ -1627,9 +1630,11 @@ Vegetable:
 - Carrot
 - Cauliflower
 - Tomato
+```
 
 
 Dictionary/ Map
+```
 Banana:
    Calories: 105
    Fat: 0.4 g
@@ -1638,9 +1643,10 @@ Grape:
    Calories: 109
    Fat: 0.6 g
    Carbs: 12 G 
-
-
+```
+```
 KeyValue / Dictionary/List
+```
 Fruits:
     - Banana:
         Calories: 105
@@ -1650,35 +1656,49 @@ Fruits:
         Calories: 109
         Fat: 0.6 g
         Carbs: 12 G 
-
-
-docker -H=remoteIP-OR-domainname:2375 run nginx --> download image from private hosted docker registry
-
-docker run --cpus=.5 ubuntu --> Limit container cpu usage
-docker run --memory=100m ubuntu --> Limit container memory usage
-
-docker stored data into host machine "/var/lib/docker"
-
-docker volume create data_volume --> to create volume for docker
-
-docker run -v data_volume:/var/lib/mysql mysql --> attach volume, and it will not delete if you delete docker
-
-docker run --mount type=bind,source=/data/volume1,target=/var/lib/mysql mysql
-
-docker history imageid --> to check command layer of image
-
-docker system df --> check images, container and local volume size 
-
-docker run -v /opt/data/:/var/lib/mysql -d --name mysql-db -e MYSQL_ROOT_PASSWORD=db_pass123 mysql  --> attach volume | set mysql password 
-
-docker network ls --> check network 
-
-docker network create --driver bridge --subnet 182.18.0.1/24 --gateway 182.18.0.1 wp-mysql-network ---> Create new network
-
-docker run --network=wp-mysql-network -e DB_Host=mysql-db -e DB_Password=db_pass123 -p 38080:8080 --name webapp --link mysql-db:mysql-db -d nginx
+```
 
 ```
-Kubernetes Basics
+docker -H=remoteIP-OR-domainname:2375 run nginx --> download image from private hosted docker registry
+```
+```
+docker run --cpus=.5 ubuntu --> Limit container cpu usage
+```
+```
+docker run --memory=100m ubuntu --> Limit container memory usage
+```
+```
+docker stored data into host machine "/var/lib/docker"
+```
+```
+docker volume create data_volume --> to create volume for docker
+```
+```
+docker run -v data_volume:/var/lib/mysql mysql --> attach volume, and it will not delete if you delete docker
+```
+```
+docker run --mount type=bind,source=/data/volume1,target=/var/lib/mysql mysql
+```
+```
+docker history imageid --> to check command layer of image
+```
+```
+docker system df --> check images, container and local volume size 
+```
+```
+docker run -v /opt/data/:/var/lib/mysql -d --name mysql-db -e MYSQL_ROOT_PASSWORD=db_pass123 mysql  --> attach volume | set mysql password 
+```
+```
+docker network ls --> check network 
+```
+```
+docker network create --driver bridge --subnet 182.18.0.1/24 --gateway 182.18.0.1 wp-mysql-network ---> Create new network
+```
+```
+docker run --network=wp-mysql-network -e DB_Host=mysql-db -e DB_Password=db_pass123 -p 38080:8080 --name webapp --link mysql-db:mysql-db -d nginx
+```
+
+# Kubernetes Basics
 ```
 Kubernetes 
  Nodes : Instances (Servers)
@@ -1706,8 +1726,8 @@ Container Runtime
 kubectl :  command line utility used to manage a kubernetes cluster
 Minikube : To setup kubernetes (for single node)
 Kubeadm : To setup kubernetes (for multi node)
-
-
+```
+```
 Setup multinode kubernetes cluster with KUBEADM 
 install docker in all master and node servers
 install kubeadm|kubelet|kubectl in all master and node servers
@@ -1717,38 +1737,43 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/2140ac876ef134
 now run the kubeadm join command which we copied into kubeadm init step
 kubectl run nginx --image=nginx --> Launch single pod
 kubectl get pods --> List pods (container)
+```
 
-
-
+```
 PODS: 
 kubectl get nodes --> list nodes (servers/instances)
 kubectl run nginx --image=nginx
 kubectl describe pods --> It will describe all details of pods
 kubectl get pods -o wide --> It will show IP and Nod of pods
-
-
-
+```
+```
 etcd port : 2379
-
+```
+```
 kubectl get pods -n kube-system --> check kubernetes own pods
-
+```
 Controller :
+```
 watch status for all node and pods
 node monitor period = 5s default
 node monitor grace period = 40s default
 POD eviction timeout = 5m default
-
+```
+```
 Scheduler :
 Will decide which pod (container) goes which nodes
 It will make sure right pods (Memory and CPU) are place on right nodes
-
+```
+```
 Kube-Proxy :
 Is process to check for new services and add network rules to forward proper traffic to all pods
-
+```
+```
 Kubernetes YAML top level property
+```
 
 vim pod.yml
-
+```
 apiVersion: v1
 kind: Pod OR Service OR ReplicaSet OR Deployment
 metadata:
@@ -1760,14 +1785,16 @@ spec:
   containers:
      - name: nginx-container
        image: nginx
-
+```
+```
 kubectl create -f pod.yml --> Create pod
 kubectl get pods  --> Check pods
 kubectl describe pod myapp-pod  --> Describe everything for pod
-
+```
 
 ReplicaSet :
 vim rc-defination.yml
+```
 apiVersion: v1
 kind: ReplicationController
 metadata:
@@ -1787,9 +1814,10 @@ spec:
         - name: nginx-container
           image: nginx
   replicas: 3
-
+```
 
 vim replicaset-defination.yml
+```
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
@@ -1812,19 +1840,23 @@ spec:
   selector:
      matchLabels:
        type: front-end
+```
 
 Upgrade replica size from 3 to 6 
+```
 Just update the yml file and execute "kubectl replace -f replicaset-defination.yml" OR "kubectl scale -replicas=6 -f replicaset-defination.yml" 
 
 kubectl edit replicaset replicaname --> to change the in replicset parameters like replica or image
-
+```
+```
 kubectl get replicaset
 kubectl delete replicaset myapp-replicaset
-
+```
 
 DEPLOYMENT :: 
 
 vim deployment-defination.yaml
+```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -1846,39 +1878,51 @@ spec:
         image: nginx:1.7.9
         ports:
         - containerPort: 80
-
+```
 
 NAMESPACE :::
-
+```
 How we can connect db from one NS to another NS.
-
+```
 Local NS
 db-service
 Just put container name 
-
+```
+```
 Remote NS
 db-service.dev.svc.cluster.local
 ServerName(Container).NameSpace.Service(default by kubernetes).domainname(Default by kubernetes)
-
+```
+```
 kubectl create namespace dev
+```
+```
 kubectl get pods --namespace=dev
+```
+```
 kubectl get pod -A  OR kubectl get pods --all-namespace --> All pods from all namespace
+```
+```
 kubectl config set-context $(kubectl config current-context) --namespace-dev
+```
+```
 kubectl get all --all-namespaces   --> All details like deployment,service pod etc.
+```
 
 SERVICE:::
-
+```
 Service Tyoe : 
 NodePort
 ClusterIP
 LoadBalancer
+```
 
 Nodeport:
 
 Application running in POD on 80 port --> Service will connect with POD 80 to Service pod 80 --> Node will connect with Node port (any port which is exposed)
 
 vim service-nodeport-defination.yml
-
+```
 apiVersion: v1
 kind: Service
 metadata:
@@ -1892,8 +1936,10 @@ spec:
   selector:
       app: myapp
       type: front-end
-      
+```
+
 vim service-defination.yml
+```
 apiVersion: v1
 kind: Service
 metadata:
@@ -1906,38 +1952,34 @@ spec:
   selector:
       app: myapp
       type: back-end
-      
+```      
 -------------------------------------------------------------------------------------------------------------------------------------
-POD
 
 Create an NGINX Pod
-
+```
 kubectl run --generator=run-pod/v1 nginx --image=nginx
-
-
+```
 Generate POD Manifest YAML file (-o yaml). Don't create it(--dry-run)
-
+```
 kubectl run --generator=run-pod/v1 nginx --image=nginx --dry-run -o yaml
-
+```
 
 Deployment
 
 Create a deployment
-
+```
 kubectl create deployment --image=nginx nginx
-
-
+```
 Generate Deployment YAML file (-o yaml). Don't create it(--dry-run)
-
+```
 kubectl create deployment --image=nginx nginx --dry-run -o yaml
-
-
+```
 Generate Deployment YAML file (-o yaml). Don't create it(--dry-run) with 4 Replicas (--replicas=4)
-
+```
 kubectl run --generator=deployment/v1beta1 nginx --image=nginx --dry-run --replicas=4 -o yaml
+```
 
 The usage --generator=deployment/v1beta1 is deprecated as of Kubernetes 1.16. The recommended way is to use the kubectl create option instead.
-
 
 IMPORTANT:
 
@@ -1945,57 +1987,70 @@ kubectl create deployment does not have a --replicas option. You could first cre
 
 
 Save it to a file - (If you need to modify or add some other details)
-
+```
 kubectl run --generator=deployment/v1beta1 nginx --image=nginx --dry-run --replicas=4 -o yaml > nginx-deployment.yaml
-
+```
 
 OR
-
+```
 kubectl create deployment --image=nginx nginx --dry-run -o yaml > nginx-deployment.yaml
-
+```
 You can then update the YAML file with the replicas or any other field before creating the deployment.
 
 
 Service
 
 Create a Service named redis-service of type ClusterIP to expose pod redis on port 6379
-
+```
 kubectl expose pod redis --port=6379 --name redis-service --dry-run -o yaml
-
+```
 (This will automatically use the pod's labels as selectors)
 
 Or
-
+```
 kubectl create service clusterip redis --tcp=6379:6379 --dry-run -o yaml  (This will not use the pods labels as selectors, instead it will assume selectors as app=redis. You cannot pass in selectors as an option. So it does not work very well if your pod has a different label set. So generate the file and modify the selectors before creating the service)
+```
 
 
 Create a Service named nginx of type NodePort to expose pod nginx's port 80 on port 30080 on the nodes:
-
+```
 kubectl expose pod nginx --port=80 --name nginx-service --dry-run -o yaml
-
+```
 (This will automatically use the pod's labels as selectors, but you cannot specify the node port. You have to generate a definition file and then add the node port in manually before creating the service with the pod.)
 
 Or
-
+```
 kubectl create service nodeport nginx --tcp=80:80 --node-port=30080 --dry-run -o yaml
-
+```
 (This will not use the pods labels as selectors)
 
 Both the above commands have their own challenges. While one of it cannot accept a selector the other cannot accept a node port. I would recommend going with the `kubectl expose` command. If you need to specify a node port, generate a definition file using the same command and manually input the nodeport before creating the service.
 -------------------------------------------------------------------------------------------------------------------------------------
 
 Imperative command :::
-
+```
 kubectl run --generator=run-pod/v1 nginx-pod --image=nginx:alpine    --> Launch pod
+```
+```
 kubectl run --generator=run-pod/v1 redis --image=redis:alpine -l tier=db --> launch pod with label
+```
+```
 kubectl expose pod redis --port=6379 --name redis-service  --> create service for existing pod
+```
+```
 kubectl create deployment webapp --image=kodekloud/webapp-color --> Create deployment 
+```
+```
 kubectl scale deployment/webapp --replicas=3 --> The scale the webapp to 3 using command 
+```
+```
 kubectl expose deployment webapp --type=NodePort --port=8080 --name=webapp-service --dry-run -o yaml > webapp-service.yaml --> to generate a service definition file. Then edit the nodeport in it and create a service.
+```
+```
 
 ------------------------- If scheduler not available-------------------
 Need to add nodeNade parameter for assigning node manually
-
+```
 apiVersion: v1
 kind: Pod
 metadata:
@@ -2005,14 +2060,18 @@ spec:
   - name: nginx
     image: nginx
   nodeName: node-01
-  
+```  
   
   Label selectors ::::
-  
+```  
   kubectl get pods -l env=dev,bu=digital
+  ```
+  ```
   kubectl get pods -l env=dev,bu=digital,tier=frontend
+  ```
   
 vim labels.yaml
+```
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
@@ -2030,10 +2089,10 @@ spec:
       containers:
       - name: nginx
         image: nginx
-	
+```	
 
 Set Tolerations for pod -->
-
+```
 apiVersion: v1
 kind: Pod
 metadata:
@@ -2046,8 +2105,10 @@ spec:
   - key: "spray"
     value: "mortein"
     effect: "NoSchedule"
-  
+```  
+
 Create POD with name "mosquito" and container name with "nginx"
+```
 apiVersion: v1
 kind: Pod
 metadata:
@@ -2056,25 +2117,29 @@ spec:
   containers:
   - name: nginx
     image: nginx
-
+```
 Remove taint from node
+```
 kubectl taint nodes master node-role.kubernetes.io/master:NoSchedule-
 
 Example
 kubectl taint nodes node01 key=value:NoSchedule
 kubectl taint nodes node01 spray=mortein:NoSchedule
-
+```
 Check Taint for node --> 
+```
 kubectl describe node kubemaster | grep Taint
+```
 
 Taint Effect Type :
+```
 NoSchedule
 PreferNoSchedule
 NoExecute
-
+```
 
 Node Selectors :::::
-
+```
 apiVersion: v1
 kind: Pod
 metadata:
@@ -2085,13 +2150,16 @@ spec:
     image: nginx
   nodeSelector:
     size: Large
-
+```
+```
 kubectl label nodes nodename label-key=label-value
-kubectl label nodes node1 size=Large
-    
+```
+```
+kubectl label nodes node1 size=Large 
+```
 
 Node Affinity::::::
-
+```
 apiVersion: v1
 kind: Pod
 metadata:
@@ -2110,8 +2178,8 @@ spec:
                 value:
                 - Large
                 - Medium
-  
-
+```
+```
 apiVersion: v1
 kind: Pod
 metadata:
@@ -2129,7 +2197,8 @@ spec:
                 operator: NotIn
                 value:
                 - Small
-
+```
+```
 apiVersion: v1
 kind: Pod
 metadata:
@@ -2145,17 +2214,18 @@ spec:
            -  matchExpression:
               - key: size
                 operator: Exists
-		
+```		
 		
 Apply new label to Node
+```
 kubectl label node node01 color=blue OR kubectl edit node node01   
-
-
+```
+```
 kubectl run blue --image=nginx --replica=6
-
+```
 
 Set nodeAffinity :::::
-
+```
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -2181,31 +2251,30 @@ spec:
             - matchExpressions:
               - key: node-role.kubernetes.io/master
                 operator: Exists
-
+```
 
 -------------------------------------------------------------------------------------------------------------------------------------
+```
 1. Run the kubectl edit pod <pod name> command.  This will open the pod specification in an editor (vi editor). Then edit the required properties. When you try to save it, you will be denied. This is because you are attempting to edit a field on the pod that is not editable.
 
-
-
-A copy of the file with your changes is saved in a temporary location as shown above.
+A copy of the file with your changes is saved in a temporary location as shown after command.
 
 You can then delete the existing pod by running the command:
-
+```
 kubectl delete pod webapp
-
-
+```
 
 Then create a new pod with your changes using the temporary file
-
+```
 kubectl create -f /tmp/kubectl-edit-ccvrq.yaml
+```
+```
 
-
-
+```
 2. The second option is to extract the pod definition in YAML format to a file using the command
-
+```
 kubectl get pod webapp -o yaml > my-new-pod.yaml
-
+```
 Then make the changes to the exported file using an editor (vi editor). Save the changes
 
 vi my-new-pod.yaml
@@ -2215,24 +2284,30 @@ Then delete the existing pod
 kubectl delete pod webapp
 
 Then create a new pod with the edited file
-
+```
 kubectl create -f my-new-pod.yaml
+```
+```
 
-
-
+```
 Edit Deployments
 With Deployments you can easily edit any field/property of the POD template. Since the pod template is a child of the deployment specification,  with every change the deployment will automatically delete and create a new pod with the new changes. So if you are asked to edit a property of a POD part of a deployment you may do that simply by running the command
-
+```
 kubectl edit deployment my-deployment
-
+```
+```
 kubectl get pod podname -o yaml > elephant.yaml   --> generate yaml file from existing pod
-
+```
+```
 kubectl get events
+```
+```
 kubectl logs my-scheduler --name-space=kube-system
-
+```
+```
 
 Second Scheduler :
-
+```
 apiVersion: v1
 kind: Pod
 metadata:
@@ -2278,10 +2353,10 @@ spec:
       type: FileOrCreate
     name: kubeconfig
 status: {}
-
+```
 
 Run pod under newly create scheduler :
-
+```
 apiVersion: v1
 kind: Pod
 metadata:
@@ -2291,32 +2366,41 @@ spec:
   -  image: nginx
      name: nginx
   schedulerName: my-scheduler
-
+```
+```
 kubectl logs -f webapp-2 -c simple-webapp --> Check log of simple-webapp container inside the webapp pod
-
+```
+```
 kubectl logs -f webapp-1 --> Check the log
-
+```
+```
 kubectl rollout status deployment/deploymentname
-
+```
+```
 Deployment Strategy ::
 Recreate
 Rolling update
-
+```
 
 kubectl apply -f deployment.yaml
-
+```
+```
 kubectl get replicasets
-
+```
+```
 kubectl rollout undo deployment/deployname
-
-
+```
+```
 kubectl run nginx --image=nginx --> create deployment
+```
+
 
 Create ConfigMap ::::::
-
+```
 Imperative way
 kubectl create configmap app-config --from-literal=APP_COLOR=blue --from-literal=APP_MOD=prod
-
+```
+```
 Declarative way 
 
 vim configmap.yaml 
@@ -2330,12 +2414,16 @@ data:
    APP_MODE: prod
 
 kubectl create -f configmap.yaml
-
+```
+```
 kubectl get configmaps  
+```
+```
 kubectl describe configmaps
-
+```
 
 How to map configMap into Pods ::::::
+```
 vim pod.yaml
 apiVersion: v1
 kind: Pod
@@ -2355,11 +2443,12 @@ spec:
     name: webapp-color
 
 kubectl create -f pod.yaml
-
+```
 Secret :::::::::::::::::::::::::::::::::::::::;
-
+```
 kubectl create secret generic app-secret --from-literal=DB_Host=mysql --from-literal=DB_User=root --from-literal=DB_Password=paswrd
-
+```
+```
 kubectl create -f 
 
 apiVersion: v1
@@ -2370,8 +2459,8 @@ data:
    DB_Host: mysql
    DB_User: root
    DB_Password: paswrd
-
-
+```
+```
 Encrypt details with base 64
 
 echo -n "mysql" | base64
@@ -2383,9 +2472,10 @@ Decode
 echo -n "fddgsf==" | base64 --decode
 echo -n "frth==" | base64 --decode
 echo -n "bxdf==" | base64 --decode
-
+```
 
 vim pod-with-secret.yaml
+```
 apiVersion: v1
 kind: Pod
 metadata:
@@ -2400,10 +2490,11 @@ spec:
     envFrom:
     - secretRef:
         name: db-secret
-
+```
 
 
 vim multi-container-pod.yaml
+```
 apiVersion: v1
 kind: Pod
 metadata:
@@ -2431,8 +2522,10 @@ spec:
   - name: init-myservice
     image: busybox
     command: ['sh', '-c', 'git clone <some-repository-that-will-be-used-by-application> ; done;']
+```
 
 multi-initcontainer.yaml
+```
 apiVersion: v1
 kind: Pod
 metadata:
@@ -2451,11 +2544,11 @@ spec:
   - name: init-mydb
     image: busybox:1.28
     command: ['sh', '-c', 'until nslookup mydb; do echo waiting for mydb; sleep 2; done;']
-
+```
 
 
 Kubernets Upgrade OS 
-
+```
 kubectl drain node-1 --> it will transfer running pod to another nodes
 
 kubectl uncordon node-1  --> put it back to cluster once maintance done.
@@ -2479,16 +2572,19 @@ kubectl get nodes
 kubectl drain node-1
 kubectl cordon node-2
 kubectl uncordon node-1
-
+```
+```
 kubectl run --generator=run-pod/v1 nginx-pod --image=nginx:alpine 
-
+```
 Backup :::::::
+```
 https://github.com/etcd-io/etcd/blob/master/Documentation/op-guide/recovery.md
 apiserver
 kubectl get all --all-namespaces -o yaml > all-deploy-services.yaml
+```
 
 ETCD Cluster
-
+```
 ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key snapshot save /tmp/snapshot-pre-boot.db
 
 All ETCD commands required to mentioned below parameter
@@ -2499,12 +2595,12 @@ All ETCD commands required to mentioned below parameter
 --key=/etc/etcd/etcd-server.key
 
 ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key snapshot save /tmp/snapshot-pre-boot.db
-
+```
 
 restore ETCD
-
+```
 ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key snapshot restore /tmp/snapshot-pre-boot.db --name master --data-dir=/var/lib/etcd-from-backup --initial-cluster=master=https://127.0.0.1:2380 --initial-cluster-token=etcd-cluster-1 --initial-advertise-peer-urls=https://127.0.0.1:2380
-
+```
 vim /etc/kubernetes/manifests/etcd.yaml --> update volume mount in this manifest file (3 location)
 
 service kube-spiserver stopped
@@ -2519,7 +2615,7 @@ service kube-apiserver start
 
 
 Static Password file
-
+```
 Setup basic authentication on kubernetes
 Note: This is not recommended in a production environment. This is only for learning purposes.
 
@@ -2630,10 +2726,10 @@ need to push below line into kube-apiserver.yaml file and restart api
 
 to verify :
 curl -v -k https://apiserverIP:6443/api/v1/pods --header "Authorization: Bearer token"
-
+```
 
 Create Role ::
-
+```
 kubectl create role developer --verb=create --verb=list --resource=pods
 
 Create RoleBinding ::
@@ -2642,9 +2738,10 @@ kubectl create rolebinding dev-user-binding --role=developer --serviceaccount=na
 How to store private username password for private image repo.
 
 kubectl create secret docker-registry registerycredentials --docker-server=private.url.com --docker-username=username --docker-password=pass --docker-email=email@gmail.com
+```
 
 PVClaim :::
-
+```
 apiVersion: v1
 kind: Pod
 metadata:
@@ -2660,7 +2757,7 @@ spec:
     - name: mypd
       persistentVolumeClaim:
         claimName: myclaim
-
+```
 
 Ingress - Annotations and rewrite-target ::::::::::
 Different ingress controllers have different options that can be used to customise the way it works. NGINX Ingress controller has many options that can be seen here. I would like to explain one such option that we will use in our labs. The Rewrite target option.
@@ -2744,8 +2841,8 @@ kubectl top
 
 
 
-```
-**Ansible**
+
+# Ansible
 ```
 
 # Sample Inventory File
@@ -3287,3 +3384,4 @@ install packages with loop.yaml
         -
               with_items: "{{packages}}" yum: 'name={{item}} state=present'
 
+```
