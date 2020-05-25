@@ -2769,7 +2769,7 @@ Our watch app displays the video streaming webpage at http://<watch-service>:<po
 Our wear app displays the apparel webpage at http://<wear-service>:<port>/
 ```
 We must configure Ingress to achieve the below. When user visits the URL on the left, his request should be forwarded internally to the URL on the right. Note that the /watch and /wear URL path are what we configure on the ingress controller so we can forwarded users to the appropriate application in the backend. The applications don't have this URL/Path configured on them:
-```
+
 ```
 http://<ingress-service>:<ingress-port>/watch --> http://<watch-service>:<port>/
 ```
