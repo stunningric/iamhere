@@ -1,47 +1,57 @@
 # MySQL Backup only schema and data
 
-`
+```
 mysqldump -u root -p --no-create-info dbname tablename1 tablename2 > data.sql     ------------ only DATA
 
 mysqldump -u root -p --no-data dbname tablename1 tablename2 > schema.sql   ------------ only SCHEME
 ```
-**PM2 Commands**
+
+# PM2 Commands
 ```
 pm2 start python.py -n "Python"						#python olery_service.py
 pm2 start npm -n "appname" -- start					#npm start
 pm2 start npm -n "appname" -- start					#npm start
 pm2 start start.sh -n "Bash"						#sh start.sh
 PORT=3001 pm2 start npm -n "appname" -- start				#npm start PARAMETER1 PARAMETER2
+```
+```
 sudo pm2 start http.js -n "proxy" --interpreter=/home/developer/node-v6.10.3/bin/node #sudo node http.js
+```
 
 Once run all application execute "pm2 startup" which gives generate another command to run as below
-
+```
 sudo env PATH=$PATH:/usr/local/bin /usr/local/n/versions/node/6.0.0/lib/node_modules/pm2/bin/pm2 startup systemd -u dev --hp /home/dev --service-name pm2
+```
 
 Once execute the command it will create service pm2, which will restart all app if server restart.
-
+```
 pm2 start server.js --name appname -- -e=dev . ------ for dev
+```
+```
 Run pm2 with environment file configuration. create .env file with multiple environment like .env.live , .env.dev , .env.local
 ```
-**MySQL Import CSV with LOAD INFILE**
+
+# MySQL Import CSV with LOAD INFILE
 ```
 LOAD DATA INFILE 'data.csv' INTO TABLE mytables  FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' LINES TERMINATED BY '\n' IGNORE 1 LINES;
 ```
-**TAR exclude command**
+# TAR exclude command
 ```
 tar -zcv --exclude='file1' --exclude='patter*' --exclude='file2' -f /backup/filename.tgz .	
 
 
 tar -zcvf filename.tar.gz foldername --exclude="cache" --exclude="capcha" --exclude="css" --exclude="css_secure" --exclude="js" --exclude="tmp"  --exclude="catalog/product/cache"
 ```
-**Magento Permission**
+
+# Magento Permission
 ```
 sudo find var/ -type f -exec chmod 600 {} \; 
 sudo find media/ -type f -exec chmod 600 {} \;
 sudo find var/ -type d -exec chmod 700 {} \; 
 sudo find media/ -type d -exec chmod 700 {} \;
 ```
-**S3 Bucket Allowed 2 IP**
+
+# S3 Bucket Allowed 2 IP
 ```
 {
 	"Version": "2008-10-17",
@@ -64,7 +74,7 @@ sudo find media/ -type d -exec chmod 700 {} \;
 	]
 }
 ```
-**MongoDB Backup Script**
+# MongoDB Backup Script
 ```
 #!/bin/bash
 #Create Variables.
@@ -112,7 +122,7 @@ mail -s "Domainname MongoDB Backup-$TIMESTAMP" rchauhan@theitideas.com,second@th
 MongoDB Database backup done and Database files copied to S3 bucket below is the total size of backup bucket.
 `cat /home/ubuntu/mongodbbackup/mongodb_log$TIMESTAMP.txt`
 EOF
-
+```
 
 ### Delete files older than 3 Days ###
 find /home/ubuntu/mongodbbackup/* -mtime +5 -exec rm -rf {} \;
