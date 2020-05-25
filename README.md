@@ -1279,9 +1279,9 @@ ps axo rss,comm,pid \
 Cheat Sheet
 ```
 https://github.com/chubin/cheat.sh
-
 ```
-OpenMediaVault Password Reset
+
+# OpenMediaVault Password Reset
 ```
 Known Root Password
 Login to the OMV using the root user and the current password via SSH or Console
@@ -1322,10 +1322,9 @@ cd /
 umount /omvroot
 reboot
 Now connect to OMV via ssh or console and login as root.
-
-
 ```
-setfacl
+
+# setfacl
 ```
 # -R --Recursive
 # -m --Modify permission
@@ -1344,7 +1343,6 @@ setfacl -b foldername
 --> Multiple users permission
 setfacl -m u:user1:rwx,g:mygroup:rwx,u:user3:r dir1/
 
-
 --> Copy ACL from one file to other
 getfacl dir1/ > copy.txt 
 setfacl -M copy.txt dir2/
@@ -1360,11 +1358,10 @@ setfacl -R -m u:kuldeepqa:rwx,u:rakeshdev:rwx,u:gajjarstag:r dev/
 setfacl -R -m d:u:kuldeepqa:rwx,d:u:rakeshdev:rwx,d:u:gajjarstag:r dev/
 
 https://portal.tacc.utexas.edu/tutorials/acls
-
-```
-By mistake given permission -R 777 to root "/" partition
 ```
 
+# By mistake given permission -R 777 to root "/" partition
+```
 1) Spin up a new instance from the same OS AMI, login to the instance and run the following:
 2) sudo -s
 3) apt-get install acl
@@ -1374,17 +1371,15 @@ By mistake given permission -R 777 to root "/" partition
 7) cp test_permissions.txt /mnt/tempvol
 8) cd /mnt/tempvol
 9) setfacl --restore=test_permissions.txt /mnt/tempvol
-
-
 ```
-Clear History in Linux
+
+# Clear History in Linux
 ```
 cat /dev/null > ~/.bash_history && history -c && exit
-
-```
-Change Key - Pair AWS
 ```
 
+# Change Key - Pair AWS
+```
 Method 1: Launching a clone from AMI - IP address will be changed
 ====================================================
 Step1: Create an AMI of the instance: Select instance from EC2 console >> Actions >>Image >>Create image >> Give a name,image description in the fields, select no reboot >>click on create image
@@ -1458,21 +1453,48 @@ Note: In the above commands, ec2-user is the username of the instance. This may 
 Step6: Stop the recovery instance
 Step7: Once it has stopped completely, detach the secondary root volume from recovery instance and attach it back to the problem instance as /dev/xvda
 Step8: Start the problematic instance now. Now you will be able to connect with the same key you generated for the recovery instance in the problem instance.
-
-
 ```
-Change in sudoers file
+
+# Change in sudoers file
 ```
 sed -i '26s/.*/\%sudo   ALL\=\(ALL\:\ALL\) NOPASSWD\: ALL/' /etc/sudoers
-
 ```
-For loop
+
+# For loop
 ```
 for i in `cat r.txt` ; do  ssh -o StrictHostKeyChecking=no username@$i "hostname;sudo /etc/init.d/apache2 restart;sudo /etc/inid.t/apache2 status" ; done
-
-
 ```
-install java manually
+```
+for i in myserver{01..20};echo $i; do ssh username@$i -t 'sudo df -h'; done
+```
+```
+for i in `cat myservers.txt` ; do  ssh -o StrictHostKeyChecking=no $i "hostname;curl http://169.254.169.254/latest/meta-data/iam/info |grep InstanceProfileArn"
+```
+```
+for i in myservers{01..10} ; do curl http://$i:8080/index.html; echo "$i"; done
+```
+```
+Comment line number in file
+for i in myservers{01..04}; do ssh -o "StrictHostKeyChecking no" username@$i "hostname;sudo sed -i '/mailx/s/^/#/g' /opt/myfolder/myfile.txt;sudo cat /opt/myfolder/myfile.txt |grep mailx"; done
+```
+```
+Check cronjob from remote 
+for i in myservers{01..09}; do ssh $i "sudo crontab -u root -l" & done
+for i in myservers{01..09}; do ssh $i "sudo crontab -u otheruser -l" & done
+```
+```
+for i in myservers{01..04}; do ssh -o StrictHostKeyChecking=no myservers$i 'echo "export SOMEVARIABLE=myvar" | sudo tee -a ~/.bash_profile'; done
+```
+```
+Check port connectivity 
+for i in myservers{01..04}; do ssh $i "nc -zv myservices.aws.amazonaws.com 6379"; done
+```
+```
+Get Instances ID from Instance Name AWS
+for i in `cat myserver.txt`; do aws ec2 describe-instances --filters "Name=tag:Name,Values=$i" --query "Reservations[].Instances[].{Instance:InstanceId}"  --region eu-west-1 --output text
+```
+
+# install java manually
 ```
 After download .tag.gz file 
 cd /usr/lib
