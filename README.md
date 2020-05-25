@@ -363,7 +363,7 @@ export JAVA_HOME=/usr/local/jdk
 export PATH=$PATH:$JAVA_HOME/bin
 export JAVA_OPTS="-Xms128m -Xmx512m"
 ```
-**Install JAVA in Ubuntu**
+**Install JAVA in Ubuntu **
 ```
 Introduction
 As a lot of articles and programs require to have Java installed, this article will guide you through the process of installing and managing different versions of Java.
