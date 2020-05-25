@@ -1,4 +1,4 @@
-**MySQL Backup only schema and data**
+# MySQL Backup only schema and data
 
 `
 mysqldump -u root -p --no-create-info dbname tablename1 tablename2 > data.sql     ------------ only DATA
