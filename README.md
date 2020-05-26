@@ -232,6 +232,9 @@ find /home/ubuntu/script/gitlogs/* -mtime +10 -exec rm -rf {} \;
 
 Set crontab for reboot 
 @reboot sh /home/ubuntu/script/gitpull.sh
+
+Set crontab from remote server
+for i in {01..01};do ssh -o StrictHostKeyChecking=no myserver$i 'echo "01 0 * * * sh /opt/myscript.sh" | sudo tee -a /var/spool/cron/crontabs/root'; done
 ```
 
 # Assign apache group to your user
