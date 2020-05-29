@@ -3391,3 +3391,7 @@ install packages with loop.yaml
               with_items: "{{packages}}" yum: 'name={{item}} state=present'
 
 ```
+
+# Bash 
+```
+https://devhints.io/bash
