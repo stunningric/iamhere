@@ -3395,3 +3395,8 @@ install packages with loop.yaml
 # Bash 
 ```
 https://devhints.io/bash
+```
+# Check SSL certificate thought Linux command
+```
+openssl s_client -connect gujarativangi.com:443
+```
