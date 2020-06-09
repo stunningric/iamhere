@@ -3406,3 +3406,10 @@ openssl s_client -connect gujarativangi.com:443
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep eks-admin | awk '{print $1}')
 ```
 
+# Use Cross account role 
+```
+In Credentails file need to put below entry.
+[be_staging]
+role_arn = arn:aws:iam::1234565432:role/my-cross-account-role
+credential_source = Ec2InstanceMetadata
+```
