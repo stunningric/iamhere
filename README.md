@@ -3400,3 +3400,9 @@ https://devhints.io/bash
 ```
 openssl s_client -connect gujarativangi.com:443
 ```
+
+# Kubernetes Service Account Retrive
+```
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep eks-admin | awk '{print $1}')
+```
+
