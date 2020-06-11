@@ -3413,3 +3413,7 @@ In Credentails file need to put below entry.
 role_arn = arn:aws:iam::1234565432:role/my-cross-account-role
 credential_source = Ec2InstanceMetadata
 ```
+# Set indentation into file vim 
+```
+:'<,'>!xmllint --format -
+```
