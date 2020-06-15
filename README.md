@@ -3417,3 +3417,9 @@ credential_source = Ec2InstanceMetadata
 ```
 :'<,'>!xmllint --format -
 ```
+
+
+# Github CICD
+```
+https://medium.com/@ayiangio/ci-cd-with-gitlab-5d095b65c8f7
+```
