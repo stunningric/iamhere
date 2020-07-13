@@ -3423,3 +3423,10 @@ credential_source = Ec2InstanceMetadata
 ```
 https://medium.com/@ayiangio/ci-cd-with-gitlab-5d095b65c8f7
 ```
+
+# AWS VPC Association for DNS Resolve from internal DNS from Route53 internal domain
+```
+aws route53 create-vpc-association-authorization --hosted-zone-id '/hostedzone/hosttedID' --vpc VPCRegion=ap-southeast-2,VPCId=VPCID
+aws route53 associate-vpc-with-hosted-zone --hosted-zone-id '/hostedzone/hosttedID' --vpc VPCRegion=ap-southeast-2,VPCId=VPCID --profile profilename (if you are authorizing VPC from another account)
+aws route53 delete-vpc-association-authorization --hosted-zone-id '/hostedzone/hosttedID'  --vpc VPCRegion=ap-southeast-2,VPCId=VPCID
+```
