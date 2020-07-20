@@ -1744,6 +1744,7 @@ kubectl get pods --> List pods (container)
 
 ```
 PODS: 
+kubectl exec -it containername -n namespacename -- /bin/bash  --> Login into container
 kubectl get nodes --> list nodes (servers/instances)
 kubectl run nginx --image=nginx
 kubectl describe pods --> It will describe all details of pods
