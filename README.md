@@ -3409,7 +3409,7 @@ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | gre
 # Use Cross account role 
 ```
 In Credentails file need to put below entry.
-[be_staging]
+[profilename]
 role_arn = arn:aws:iam::1234565432:role/my-cross-account-role
 credential_source = Ec2InstanceMetadata
 ```
