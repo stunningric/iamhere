@@ -3431,3 +3431,13 @@ aws route53 create-vpc-association-authorization --hosted-zone-id '/hostedzone/h
 aws route53 associate-vpc-with-hosted-zone --hosted-zone-id '/hostedzone/hosttedID' --vpc VPCRegion=ap-southeast-2,VPCId=VPCID --profile profilename (if you are authorizing VPC from another account)
 aws route53 delete-vpc-association-authorization --hosted-zone-id '/hostedzone/hosttedID'  --vpc VPCRegion=ap-southeast-2,VPCId=VPCID
 ```
+
+# Delete multiple evicted pod at same time
+```
+kubectl get pods -n myapplication | grep Evicted | awk '{print $1}' | xargs kubectl -n myapplication delete pod
+```
+
+# Login into pod
+```
+kubectl exec -it pod-id -- bash
+```
