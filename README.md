@@ -3446,3 +3446,8 @@ kubectl get pods -n myapplication | grep Evicted | awk '{print $1}' | xargs kube
 ```
 kubectl exec -it pod-id -- bash
 ```
+
+# Check Public IP from Linux cli
+```
+http://checkip.amazonaws.com/
+```
