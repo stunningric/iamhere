@@ -3461,3 +3461,8 @@ curl -H "Content-Type: application/json" -X PUT --data-binary @hmshomekit-schedu
 kubectl get ns
 just ctrl+c on kubectl proxy
 ```
+
+# Check IAM Which role we are using 
+```
+aws sts get-caller-identity
+```
