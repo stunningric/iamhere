@@ -3451,3 +3451,13 @@ kubectl exec -it pod-id -- bash
 ```
 http://checkip.amazonaws.com/
 ```
+
+# Kubernetes Namespace showing terminating
+```
+Take backup of namespace --> kubectl get namespace myapp -o json > myapp.json
+kubectl proxy
+on other terminal run below command 
+curl -H "Content-Type: application/json" -X PUT --data-binary @hmshomekit-scheduler.json http://127.0.0.1:8001/api/v1/namespaces/hmshomekit-scheduler/finalize
+kubectl get ns
+just ctrl+c on kubectl proxy
+```
