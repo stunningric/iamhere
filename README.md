@@ -3466,3 +3466,8 @@ just ctrl+c on kubectl proxy
 ```
 aws sts get-caller-identity
 ```
+
+#Presign S3 bucket data for cli
+```
+aws s3 presign s3://awsexamplebucket/test2.txt --expires-in 604800
+```
