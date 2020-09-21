@@ -3471,3 +3471,53 @@ aws sts get-caller-identity
 ```
 aws s3 presign s3://awsexamplebucket/test2.txt --expires-in 604800
 ```
+# Memory check
+```
+ps -eo pid,command,pcpu,pmem --sort -rss | head -5
+
+ps -eo ppid,pid,cmd,%cpu,%mem --sort=%mem | grep -v 0.0
+
+ps -eo pcpu,pid,user,args | sort -k1 -r -n | head -10
+
+ps axo rss,comm,pid \
+| awk '{ proc_list[$2] += $1; } END \
+{ for (proc in proc_list) { printf("%d\t%s\n", proc_list[proc],proc); }}' \
+| sort -n | tail -n 10 | sort -rn \
+| awk '{$1/=1024;printf "%.0fMB\t",$1}{print $2}'
+```
+
+# Remote SSH bash Script
+```
+#!/bin/bash
+for i in {01..02}; do
+   SERVERNAME=(myserver${i})
+   echo $SERVERNAME
+   ssh -o StrictHostKeyChecking=no -i keyfile ec2-user@$SERVERNAME "sudo /etc/init.d/httpd stop; sudo /etc/init.d/httpd status"
+done
+```
+
+# nslookup multiple host
+```
+for i in `cat linux.hosts`; do nslookup $i | grep ^Name -A1| awk '{print $2}';echo;done > outputfile
+```
+
+# Change into visudo from remote server
+```
+echo '%sudo   ALL=(ALL:ALL) NOPASSWD: ALL' | sudo EDITOR='tee -a' visudo
+
+for i in {01..01}; do ssh -o StrictHostKeyChecking=no myserver$i 'echo "myvariable=true" | sudo tee -a /etc/profile.d/.profile'; done
+```
+
+# AWS Cli ec2 filter name and instance id
+```
+for i in myserver{01..01}; do aws ec2 describe-instances --filters "Name=tag:Name,Values=$i" --query "Reservations[].Instances[].{Instance:InstanceId}"  --region eu-west-1 --output text >> /tmp/myserverid.txt; done
+
+for i in cat /tmp/myserverid.txt; do aws ec2 stop-instances --instance-ids $i --region eu-west-1; done
+
+for i in cat /tmp/myserverid.txt; do aws ec2 start-instances --instance-ids $i --region eu-west-1; done
+```
+
+# sed replace word in file
+```
+sudo sed -i "s/111.111.111.111/44.229.1.185/g" /usr/local/freeswitch/conf/vars.xml
+```
