@@ -3519,5 +3519,5 @@ for i in cat /tmp/myserverid.txt; do aws ec2 start-instances --instance-ids $i -
 
 # sed replace word in file
 ```
-sudo sed -i "s/111.111.111.111/44.229.1.185/g" /usr/local/freeswitch/conf/vars.xml
+sudo sed -i "s/111.111.111.111/192.168.1.1/g" /usr/local/freeswitch/conf/vars.xml
 ```
