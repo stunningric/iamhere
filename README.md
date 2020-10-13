@@ -543,6 +543,13 @@ git log --pretty=oneline --abbrev-commit
 
 Once, verified execute below command to push the changes into remote repo.
 git push origin +master
+
+MERGE DEV BRANCH to MASTER BRANCH
+
+(ON BRANCH DEV)git merge master
+git checkout master
+git merge dev
+
 ```
 
 # S3 Policy
