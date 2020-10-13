@@ -538,7 +538,7 @@ git rebase -i HEAD~8
 
 You will be able to see the last 8 history, Delete which you want to delete and save the file.
 
-Again, review the change you made with 
+Again, review the change you made 
 git log --pretty=oneline --abbrev-commit
 
 Once, verified execute below command to push the changes into remote repo.
