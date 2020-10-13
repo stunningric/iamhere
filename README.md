@@ -546,10 +546,10 @@ git push origin +master
 
 --> MERGE DEV BRANCH to MASTER BRANCH <--
 
-(ON BRANCH DEV)git merge master
+(FROM BRANCH DEV)git merge master
 git checkout master
 git merge dev
-
+git push
 ```
 
 # S3 Policy
