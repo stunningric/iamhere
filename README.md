@@ -3543,3 +3543,8 @@ for i in cat /tmp/myserverid.txt; do aws ec2 start-instances --instance-ids $i -
 ```
 sudo sed -i "s/111.111.111.111/192.168.1.1/g" /etc/filename.conf
 ```
+
+# This command will check ~/.ssh/known_hosts and show you which public key its belongs to..
+```
+ssh-keygen -H -F yourhostname-OR-ip 
+```
