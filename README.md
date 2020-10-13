@@ -528,6 +528,21 @@ git push
 Create Remote branch 
 git branch dev
 git push origin dev
+
+REMOVING COMMITS FROM GIT HISTORY
+# First, review the history.
+$git log --pretty=oneline --abbrev-commit
+
+# check last 8 number of history
+git rebase -i HEAD~8
+
+You will be able to see the last 8 history, Delete which you want to delete and save the file.
+
+Again, review the change you made with 
+git log --pretty=oneline --abbrev-commit
+
+Once, verified execute below command to push the changes into remote repo.
+git push origin +master
 ```
 
 # S3 Policy
