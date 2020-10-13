@@ -525,11 +525,11 @@ git add index.php
 git commit -m "index.php"
 git push
 
-Create Remote branch 
+--> Create Remote branch <--
 git branch dev
 git push origin dev
 
-REMOVING COMMITS FROM GIT HISTORY
+--> REMOVING COMMITS FROM GIT HISTORY <--
 # First, review the history.
 $git log --pretty=oneline --abbrev-commit
 
@@ -544,7 +544,7 @@ git log --pretty=oneline --abbrev-commit
 Once, verified execute below command to push the changes into remote repo.
 git push origin +master
 
-MERGE DEV BRANCH to MASTER BRANCH
+--> MERGE DEV BRANCH to MASTER BRANCH <--
 
 (ON BRANCH DEV)git merge master
 git checkout master
