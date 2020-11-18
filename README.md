@@ -3464,6 +3464,19 @@ aws route53 delete-vpc-association-authorization --hosted-zone-id '/hostedzone/h
 kubectl get pods -n myapplication | grep Evicted | awk '{print $1}' | xargs kubectl -n myapplication delete pod
 ```
 
+# Check pods which are in Crashlookbackoff and Evicted state
+```
+kubectl get pods --all-namespaces | grep Crash | awk '{print $1, "-> " $2}' --> Check pods which are crashlookbackoff state
+kubectl get pods --all-namespaces | grep Evicted | awk '{print $1, "-> " $2}' --> Check pods which are evicted state
+```
+
+# Check kubectl contexts and change contexts
+```
+kubectl config get-contexts --> Check current contexts (cluster)
+kubectl config use-context nameofcluster --> Change cluster
+```
+ 
+
 # Login into pod
 ```
 kubectl exec -it pod-id -- bash
