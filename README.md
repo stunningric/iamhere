@@ -107,7 +107,7 @@ tar zcvf mongodb-$MONGO_HOST-$TIMESTAMP.tar.gz mongodb-$MONGO_HOST-$TIMESTAMP
 
 # Backup Data to S3 Bucket
 s3cmd sync -v /home/ubuntu/mongodbbackup/*.tar.gz s3://domainname-mongodb-backup/   ----- IF used s3cdm
-aws s3 sync /home/ec2-user/MongodbBackup/ s3://petbubs-mongodb-backup/      ----- IF used aws cli
+aws s3 sync /home/ec2-user/MongodbBackup/ s3://domainname-mongodb-backup/      ----- IF used aws cli
 
 s3cmd du -H s3://domainname-mongodb-backup/ >> /home/ubuntu/mongodbbackup/mongodb_log$TIMESTAMP.txt
 
