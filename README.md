@@ -3547,6 +3547,10 @@ for i in {01..01}; do ssh -o StrictHostKeyChecking=no myserver$i 'echo "myvariab
 ```
 for i in myserver{01..01}; do aws ec2 describe-instances --filters "Name=tag:Name,Values=$i" --query "Reservations[].Instances[].{Instance:InstanceId}"  --region eu-west-1 --output text >> /tmp/myserverid.txt; done
 
+aws ec2 describe-instances --filters "Name=tag:Type,Values=AutoScaled" --query "Reservations[].Instances[].{PrivateIP:PrivateIpAddress}" --output text |grep -v None
+
+aws ec2 describe-instances --filters "Name=tag-value,Values=AutoScaled" --query 'Reservations[*].Instances[*].{InstanceID:InstanceId,PrivateIP:PrivateIpAddress,Name:Tags[?Key==`Name`]|[0].Value}'  --output table
+
 for i in cat /tmp/myserverid.txt; do aws ec2 stop-instances --instance-ids $i --region eu-west-1; done
 
 for i in cat /tmp/myserverid.txt; do aws ec2 start-instances --instance-ids $i --region eu-west-1; done
