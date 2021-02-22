@@ -1289,6 +1289,555 @@ web_node3
 boston_nodes
 dallas_nodes
 
+#cat hosts
+[centos]
+centos1
+centos2
+centos3
+
+[ubuntu]
+ubuntu1
+ubuntu2
+ubuntu3
+
+#ansible -i,ubuntu1,ubuntu2,ubuntu3,centos1,centos2,centos3 all -m ping
+JSON Kind of output
+
+#ansible all -m ping -o
+ubuntu2 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+ubuntu1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+centos3 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+centos1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+centos2 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+ubuntu3 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+
+#ansible centos --list-hosts
+  hosts (3):
+    centos1
+    centos2
+    centos3
+#ansible ubuntu --list-hosts
+  hosts (3):
+    ubuntu1
+    ubuntu2
+    ubuntu3
+
+#ansible centos1 --list-hosts ( Just check one host)
+
+#ansible centos1 -m ping -o
+centos1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+
+#ansible ~.*3 --list-hosts
+  hosts (2):
+    centos3
+    ubuntu3
+
+#cat hosts 
+[centos]
+centos1 ansible_user=root
+centos2 ansible_user=root
+centos3 ansible_user=root
+
+[ubuntu]
+ubuntu1
+ubuntu2
+ubuntu3
+
+#ansible all -m command -a "id" -o
+ubuntu1 | CHANGED | rc=0 | (stdout) uid=1000(ansible) gid=1000(ansible) groups=1000(ansible),27(sudo)
+centos1 | CHANGED | rc=0 | (stdout) uid=0(root) gid=0(root) groups=0(root)
+ubuntu2 | CHANGED | rc=0 | (stdout) uid=1000(ansible) gid=1000(ansible) groups=1000(ansible),27(sudo)
+centos2 | CHANGED | rc=0 | (stdout) uid=0(root) gid=0(root) groups=0(root)
+centos3 | CHANGED | rc=0 | (stdout) uid=0(root) gid=0(root) groups=0(root)
+ubuntu3 | CHANGED | rc=0 | (stdout) uid=1000(ansible) gid=1000(ansible) groups=1000(ansible),27(sudo)
+
+#ansible all -m command -a "hostname -i" -o
+ubuntu1 | CHANGED | rc=0 | (stdout) 172.18.0.8
+centos1 | CHANGED | rc=0 | (stdout) 172.18.0.5
+ubuntu2 | CHANGED | rc=0 | (stdout) 172.18.0.6
+centos2 | CHANGED | rc=0 | (stdout) 172.18.0.7
+centos3 | CHANGED | rc=0 | (stdout) 172.18.0.3
+ubuntu3 | CHANGED | rc=0 | (stdout) 172.18.0.2
+
+#cat hosts 
+[centos]
+centos1 ansible_user=root
+centos2 ansible_user=root
+centos3 ansible_user=root
+
+[ubuntu]
+ubuntu1 ansible_become=true ansible_become_pass=password
+ubuntu2 ansible_become=true ansible_become_pass=password
+ubuntu3 ansible_become=true ansible_become_pass=password
+
+#ansible all -m command -a "id" -o
+ubuntu1 | CHANGED | rc=0 | (stdout) uid=0(root) gid=0(root) groups=0(root)
+centos1 | CHANGED | rc=0 | (stdout) uid=0(root) gid=0(root) groups=0(root)
+ubuntu2 | CHANGED | rc=0 | (stdout) uid=0(root) gid=0(root) groups=0(root)
+centos3 | CHANGED | rc=0 | (stdout) uid=0(root) gid=0(root) groups=0(root)
+centos2 | CHANGED | rc=0 | (stdout) uid=0(root) gid=0(root) groups=0(root)
+ubuntu3 | CHANGED | rc=0 | (stdout) uid=0(root) gid=0(root) groups=0(root)
+
+#cat hosts 
+[centos]
+centos1 ansible_user=root ansible_port=2222
+centos2 ansible_user=root
+centos3 ansible_user=root
+
+[ubuntu]
+ubuntu1 ansible_become=true ansible_become_pass=password
+ubuntu2 ansible_become=true ansible_become_pass=password
+ubuntu3 ansible_become=true ansible_become_pass=password
+
+#ansible all -m ping -o
+ubuntu1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+ubuntu2 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+centos2 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+centos1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+centos3 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+ubuntu3 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+
+#cat hosts 
+[centos]
+centos1:2222 ansible_user=root
+centos2 ansible_user=root
+centos3 ansible_user=root
+
+[ubuntu]
+ubuntu1 ansible_become=true ansible_become_pass=password
+ubuntu2 ansible_become=true ansible_become_pass=password
+ubuntu3 ansible_become=true ansible_become_pass=password
+
+#ansible all -m ping -o
+ubuntu2 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+centos3 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+centos2 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+ubuntu1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+centos1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+ubuntu3 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+
+#cat hosts 
+[control]
+ubuntu-c ansible_connection=local
+
+[centos]
+centos1 ansible_user=root ansible_port=2222
+centos2 ansible_user=root
+centos3 ansible_user=root
+
+[ubuntu]
+ubuntu1 ansible_become=true ansible_become_pass=password
+ubuntu2 ansible_become=true ansible_become_pass=password
+ubuntu3 ansible_become=true ansible_become_pass=password
+
+#ansible all -m ping -o
+ubuntu-c | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+centos3 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+centos1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+ubuntu1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+centos2 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+ubuntu2 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+ubuntu3 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+
+#cat hosts 
+[control]
+ubuntu-c ansible_connection=local
+
+[centos]
+centos1 ansible_user=root ansible_port=2222
+centos[2:3] ansible_user=root
+
+[ubuntu]
+ubuntu[1:3] ansible_become=true ansible_become_pass=password
+
+#ansible all --list-hosts
+  hosts (7):
+    ubuntu-c
+    centos1
+    centos2
+    centos3
+    ubuntu1
+    ubuntu2
+    ubuntu3
+
+#cat hosts 
+[control]
+ubuntu-c ansible_connection=local
+
+[centos]
+centos1 ansible_port=2222
+centos[2:3]
+
+[centos:vars]
+ansible_user=root
+
+[ubuntu]
+ubuntu[1:3]
+
+[ubuntu:vars]
+ansible_become=true
+ansible_become_pass=password
+
+#ansible all -m ping -o
+ubuntu-c | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+centos2 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+centos3 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+centos1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+ubuntu1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+ubuntu2 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+ubuntu3 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+
+#cat hosts 
+[control]
+ubuntu-c ansible_connection=local
+
+[centos]
+centos1 ansible_port=2222
+centos[2:3]
+
+[centos:vars]
+ansible_user=root
+
+[ubuntu]
+ubuntu[1:3]
+
+[ubuntu:vars]
+ansible_become=true
+ansible_become_pass=password
+
+[linux:children]
+centos
+ubuntu
+
+#ansible linux -m ping -o
+ubuntu2 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+centos3 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+centos1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+ubuntu1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+centos2 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+ubuntu3 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+
+#cat hosts
+[control]
+ubuntu-c ansible_connection=local
+
+[centos]
+centos1 ansible_port=2222
+centos[2:3]
+
+[centos:vars]
+ansible_user=root
+
+[ubuntu]
+ubuntu[1:3]
+
+[ubuntu:vars]
+ansible_become=true
+ansible_become_pass=password
+
+[linux:children]
+centos
+ubuntu
+
+[all:vars]
+ansible_port=1234
+
+# ansible linux -m ping -o
+ubuntu2 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host ubuntu2 port 1234: Connection refused
+centos2 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host centos2 port 1234: Connection refused
+centos3 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host centos3 port 1234: Connection refused
+ubuntu1 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host ubuntu1 port 1234: Connection refused
+ubuntu3 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host ubuntu3 port 1234: Connection refused
+centos1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+
+#ansible all -m ping -o
+centos2 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host centos2 port 1234: Connection refused
+centos3 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host centos3 port 1234: Connection refused
+ubuntu1 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host ubuntu1 port 1234: Connection refused
+ubuntu3 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host ubuntu3 port 1234: Connection refused
+ubuntu2 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host ubuntu2 port 1234: Connection refused
+ubuntu-c | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+centos1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+
+#cat hosts
+[control]
+ubuntu-c ansible_connection=local
+
+[centos]
+centos1 ansible_port=2222
+centos[2:3]
+
+[centos:vars]
+ansible_user=root
+
+[ubuntu]
+ubuntu[1:3]
+
+[ubuntu:vars]
+ansible_become=true
+ansible_become_pass=password
+
+[linux:children]
+centos
+ubuntu
+
+[all:vars]
+ansible_port=1234
+
+#ansible linux -m ping -o
+centos3 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host centos3 port 1234: Connection refused
+centos2 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host centos2 port 1234: Connection refused
+ubuntu2 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host ubuntu2 port 1234: Connection refused
+ubuntu1 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host ubuntu1 port 1234: Connection refused
+ubuntu3 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host ubuntu3 port 1234: Connection refused
+centos1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+
+#ansible all -m ping -o
+centos2 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host centos2 port 1234: Connection refused
+centos3 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host centos3 port 1234: Connection refused
+ubuntu1 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host ubuntu1 port 1234: Connection refused
+ubuntu2 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host ubuntu2 port 1234: Connection refused
+ubuntu3 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host ubuntu3 port 1234: Connection refused
+ubuntu-c | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+centos1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+
+#cat hosts
+[control]
+ubuntu-c ansible_connection=local
+
+[centos]
+centos1 ansible_port=2222
+centos[2:3]
+
+[centos:vars]
+ansible_user=root
+
+[ubuntu]
+ubuntu[1:3]
+
+[ubuntu:vars]
+ansible_become=true
+ansible_become_pass=password
+
+[linux:children]
+centos
+ubuntu
+
+[linux:vars]
+ansible_port=1234
+
+#ansible linux -m ping -o
+ubuntu2 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host ubuntu2 port 1234: Connection refused
+centos3 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host centos3 port 1234: Connection refused
+centos2 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host centos2 port 1234: Connection refused
+ubuntu1 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host ubuntu1 port 1234: Connection refused
+ubuntu3 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host ubuntu3 port 1234: Connection refused
+centos1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+
+#cat hosts.yaml 
+---
+control:
+  hosts:
+    ubuntu-c:
+      ansible_connection: local
+centos:
+  hosts:
+    centos1:
+      ansible_port: 2222
+    centos2:
+    centos3:
+  vars:
+    ansible_user: root
+ubuntu:
+  hosts:
+    ubuntu1:
+    ubuntu2:
+    ubuntu3:
+  vars:
+    ansible_become: true
+    ansible_become_pass: password
+linux:
+  children:
+    centos:
+    ubuntu:
+...
+
+#ansible all -m ping -o
+ubuntu-c | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+ubuntu1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+centos2 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+centos1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+centos3 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+ubuntu2 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+ubuntu3 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+
+#cat hosts.json 
+{
+    "control": {
+        "hosts": {
+            "ubuntu-c": {
+                "ansible_connection": "local"
+            }
+        }
+    },
+    "centos": {
+        "hosts": {
+            "centos1": {
+                "ansible_port": 2222
+            },
+            "centos2": null,
+            "centos3": null
+        },
+        "vars": {
+            "ansible_user": "root"
+        }
+    },
+    "ubuntu": {
+        "hosts": {
+            "ubuntu1": null,
+            "ubuntu2": null,
+            "ubuntu3": null
+        },
+        "vars": {
+            "ansible_become": true,
+            "ansible_become_pass": "password"
+        }
+    },
+    "linux": {
+        "children": {
+            "centos": null,
+            "ubuntu": null
+        }
+    }
+}
+
+#ansible all -m ping -o
+ubuntu-c | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+centos2 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+centos1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+ubuntu1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+centos3 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+ubuntu2 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+ubuntu3 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+
+
+#ansible all -i hosts.yaml --list-hosts
+  hosts (7):
+    ubuntu-c
+    centos1
+    centos2
+    centos3
+    ubuntu1
+    ubuntu2
+    ubuntu3
+
+#ansible all -i hosts.json --list-hosts
+  hosts (7):
+    ubuntu-c
+    centos3
+    centos2
+    centos1
+    ubuntu1
+    ubuntu2
+    ubuntu3
+
+#ansible all -i hosts --list-hosts
+  hosts (7):
+    ubuntu-c
+    centos1
+    centos2
+    centos3
+    ubuntu1
+    ubuntu2
+    ubuntu3
+
+#cat hosts
+[control]
+ubuntu-c ansible_connection=local
+
+[centos]
+centos1 ansible_port=2222
+centos[2:3]
+
+[centos:vars]
+ansible_user=root
+
+[ubuntu]
+ubuntu[1:3]
+
+[ubuntu:vars]
+ansible_become=true
+ansible_become_pass=password
+
+[linux:children]
+centos
+ubuntu
+
+#ansible all -m ping -o -e "ansible_port=22" -o
+centos1 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host centos1 port 22: Connection refused
+ubuntu-c | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+centos2 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+ubuntu1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+centos3 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+ubuntu2 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+ubuntu3 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+
+#ansible all -m ping -o -e "ansible_port=2222" -o
+centos2 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host centos2 port 2222: Connection refused
+centos3 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host centos3 port 2222: Connection refused
+ubuntu1 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host ubuntu1 port 2222: Connection refused
+ubuntu2 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host ubuntu2 port 2222: Connection refused
+ubuntu3 | UNREACHABLE!: Failed to connect to the host via ssh: ssh: connect to host ubuntu3 port 2222: Connection refused
+ubuntu-c | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"},"changed": false,"ping": "pong"}
+centos1 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/libexec/platform-python"},"changed": false,"ping": "pong"}
+
+#ansible centos1 -m setup  --> We used setup module to get All system details of centos1
+
+#ansible centos1 -m file -a 'path=/tmp/test state=touch'  --> file modeule to create file
+centos1 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/libexec/platform-python"
+    },
+    "changed": true,
+    "dest": "/tmp/test",
+    "gid": 0,
+    "group": "root",
+    "mode": "0644",
+    "owner": "root",
+    "size": 0,
+    "state": "file",
+    "uid": 0
+}
+
+#ansible all -m file -a 'path=/tmp/test state=file mode=600'
+Output came into yellow Color
+
+Red Color Output : failure
+Yellow Color Output : Success, with changes
+Green Color Output : Success, no Changes
+
+#ansible all -m file -a 'path=/tmp/test state=file mode=600'
+Ran again same command will return output into Green
+
+
+#ansible all -m copy -a 'src=/tmp/x dest=/tmp/x' 
+
+#ansible all -m copy -a 'remote_src=yes src=/tmp/x dest=/tmp/y'
+
+#ansible all -a 'hostname -i' -o --> Shell module is by default no need to mention as -M
+
+#ansible all -a 'touch /tmp/testfile creates=/tmp/testfile'  --> Create file
+
+#ansible all -a 'touch /tmp/testfile creates=/tmp/testfile'  --> Ran again to check file is exist or not
+
+#ansible all -a 'rm /tmp/testfile removes=/tmp/testfile'  --> Remove file
+
+#ansible all -m fetch -a 'src=/tmp/1.txt dest=/tmp/'  --> Copy source file from all machine to /tmp/
+
+#ansible centos1 -m fetch -a 'src=/tmp/1.txt dest=/tmp/fetch/'  --> Copy source file from centos1 to /tmp/fetch
+
+#ansible centos1 -m copy -a 'remote_src=yes src=/tmp/1.txt dest=/tmp/y'  --> Copy source file to remove server
+
 ```
 Memory Commands
 ```
