@@ -4114,3 +4114,8 @@ sudo sed -i "s/111.111.111.111/192.168.1.1/g" /etc/filename.conf
 ```
 ssh-keygen -H -F yourhostname-OR-ip 
 ```
+
+# Check port connection from Powershell (telnet)
+```
+tnc google.com -port 443
+```
