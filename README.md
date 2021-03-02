@@ -1846,6 +1846,482 @@ Ran again same command will return output into Green
 
 #ansible centos1 -m copy -a 'remote_src=yes src=/tmp/1.txt dest=/tmp/y'  --> Copy source file to remove server
 
+#ansible all -i centos2, -m setup   --> We used setup module to get All system details of centos2
+#ansible all -i centos2,ubuntu2 -m setup  -->  We used setup module to get All system details of centos2 and ubuntu2
+#ansible all -i centos2,ubuntu2 -m setup |grep ansible_distribution  --> Find OS distribution
+
+
+Detect OS and apply changes
+---
+-
+    hosts: linux
+    vars:
+      m_centos: "Welcome Centos \n"
+      m_ubuntu: "Welcome Ubuntu \n"
+
+    tasks:
+      - name: Copy motd in centos
+        copy:
+          content: "{{ m_centos }}"
+          dest: /etc/motd
+        notify: Debug
+        when: ansible_distribution == "CentOS"
+
+      - name: Copy motd in ubuntu
+        copy:
+          content: "{{ m_ubuntu }}"
+          dest: /etc/motd
+        notify: Debug
+        when: ansible_distribution == "Ubuntu"
+    handlers:
+      - name: Debug
+        debug: 
+          msg: Changes has been done
+...
+
+https://docs.ansible.com/ansible/2.4/playbooks_keywords.html
+
+variables
+---
+-
+  hosts: centos1
+  gather_facts: False
+  vars:
+    example_key: example value
+  tasks:
+    - name: Test dictionary key value
+      debug:
+        msg: "{{ example_key }}"
+...
+
+
+---
+-
+  hosts: centos1
+  gather_facts: False
+  vars:
+    dict:
+      dict_key: This is a dictionary value
+  tasks:
+    - name: Test named dictionary dictionary
+      debug:
+        msg: "{{ dict }}"
+ 
+    - name: Test named dictionary dictionary key value with dictionary dot notation
+      debug:
+        msg: "{{ dict.dict_key }}"
+ 
+    - name: Test named dictionary dictionary key value with python brackets notation
+      debug:
+        msg: "{{ dict['dict_key'] }}"
+...
+
+---
+-
+  hosts: centos1
+  gather_facts: False
+  vars:
+    inline_dict:
+      {inline_dict_key: This is an inline dictionary value}
+  tasks:
+    - name: Test named inline dictionary dictionary
+      debug:
+        msg: "{{ inline_dict }}"
+ 
+    - name: Test named inline dictionary dictionary key value with dictionary dot notation
+      debug:
+        msg: "{{ inline_dict.inline_dict_key }}"
+ 
+    - name: Test named inline dictionary dictionary key value with brackets notation
+      debug:
+        msg: "{{ inline_dict['inline_dict_key'] }}"
+...
+
+---
+-
+  hosts: centos1
+  gather_facts: False
+  vars:
+    named_list:
+      - item1
+      - item2
+      - item3
+      - item4
+  tasks:
+    - name: Test named list
+      debug:
+        msg: "{{ named_list }}"
+ 
+    - name: Test named list first item dot notation
+      debug:
+        msg: "{{ named_list.0 }}"
+ 
+    - name: Test named list first item brackets notation
+      debug:
+        msg: "{{ named_list[0] }}"
+...
+
+---
+-
+  hosts: centos1
+  gather_facts: False
+  vars:
+    inline_named_list:
+      [ item1, item2, item3, item4 ]
+  tasks:
+    - name: Test inline named list
+      debug:
+        msg: "{{ inline_named_list }}"
+ 
+    - name: Test inline named list first item dot notation
+      debug:
+        msg: "{{ inline_named_list.0 }}"
+ 
+    - name: Test inline named list first item brackets notation
+      debug:
+        msg: "{{ inline_named_list[0] }}"
+...
+
+================external_vars ========
+cat external_vars.yaml 
+---
+external_example_key: example value
+
+external_dict:
+   dict_key: This is a dictionary value
+
+external_inline_dict: 
+   {inline_dict_key: This is an inline dictionary value}
+
+external_named_list:
+   - item1
+   - item2
+   - item3
+   - item4
+
+external_inline_named_list:
+   [ item1, item2, item3, item4 ]
+...
+
+
+cat playbook.yaml 
+---
+-
+  hosts: centos1
+  gather_facts: False
+  vars_files:
+    - external_vars.yaml
+  tasks:
+    - name: Test external dictionary key value
+      debug:
+        msg: "{{ external_example_key }}"
+
+    - name: Test external named dictionary dictionary
+      debug:
+        msg: "{{ external_dict }}"
+
+    - name: Test external named dictionary dictionary key value with dictionary dot notation
+      debug:
+        msg: "{{ external_dict.dict_key }}"
+
+    - name: Test external named dictionary dictionary key value with brackets notation
+      debug:
+        msg: "{{ external_dict['dict_key'] }}"
+ 
+    - name: Test external named inline dictionary dictionary
+      debug:
+        msg: "{{ external_inline_dict }}"
+ 
+    - name: Test external named inline dictionary dictionary key value with dictionary dot notation
+      debug:
+        msg: "{{ external_inline_dict.inline_dict_key }}"
+ 
+    - name: Test external named inline dictionary dictionary key value with brackets notation
+      debug:
+        msg: "{{ external_inline_dict['inline_dict_key'] }}"
+ 
+    - name: Test external named list
+      debug:
+        msg: "{{ external_named_list }}"
+ 
+    - name: Test external named list first item dot notation
+      debug:
+        msg: "{{ external_named_list.0 }}"
+ 
+    - name: Test external named list first item brackets notation
+      debug:
+        msg: "{{ external_named_list[0] }}"
+ 
+    - name: Test external inline named list
+      debug:
+        msg: "{{ external_inline_named_list }}"
+ 
+    - name: Test external inline named list first item dot notation
+      debug:
+        msg: "{{ external_inline_named_list.0 }}"
+ 
+    - name: Test external inline named list first item brackets notation
+      debug:
+        msg: "{{ external_inline_named_list[0] }}"
+...
+
+================external_vars ========
+
+Prompt username variable
+---
+-
+  hosts: centos1
+  gather_facts: False
+  vars_prompt:
+    - name: username
+      private: False
+  tasks:
+    - name: Test vars_prompt
+      debug:
+        msg: "{{ username }}"
+...
+
+---
+-
+  hosts: centos1
+  gather_facts: False
+  vars_prompt:
+    - name: password
+      private: True
+  tasks:
+    - name: Test vars_prompt
+      debug:
+        msg: "{{ password }}"
+...
+
+======groupvars======
+
+cat hosts 
+[control]
+ubuntu-c ansible_connection=local
+
+[centos]
+centos1 ansible_port=2222
+centos[2:3]
+
+[centos:vars]
+ansible_user=root
+
+cat playbook.yaml
+---
+-
+  hosts: centos1
+  gather_facts: True
+
+  # Tasks: the list of tasks that will be executed within the playbook
+  tasks:
+    - name: Test hostvars with an ansible fact and collect ansible_port, dot notation
+      debug:
+        msg: "{{ hostvars[ansible_hostname].ansible_port }}"
+
+    - name: Test hostvars with an ansible fact and collect ansible_port, dict notation
+      debug:
+        msg: "{{ hostvars[ansible_hostname]['ansible_port'] }}"
+ 
+# Three dots indicate the end of a YAML document
+...
+
+cat hosts 
+[control]
+ubuntu-c ansible_connection=local
+
+[centos]
+centos1 ansible_port=2222
+centos[2:3]
+
+[centos:vars]
+ansible_user=root
+
+cat playbook.yaml
+---
+-
+  hosts: centos
+  gather_facts: True
+  tasks:
+    - name: Test hostvars with an ansible fact and collect ansible_port, dot notation, default if not found
+      debug:
+        msg: "{{ hostvars[ansible_hostname].ansible_port | default('22') }}"
+
+    - name: Test hostvars with an ansible fact and collect ansible_port, dict notation, default if not found
+      debug:
+        msg: "{{ hostvars[ansible_hostname]['ansible_port'] | default('22') }}"
+...
+
+
+cat hosts
+[control]
+ubuntu-c ansible_connection=local
+
+[centos]
+centos1 ansible_port=2222
+centos[2:3]
+
+[centos:vars]
+ansible_user=root
+
+cat playbook.yaml
+---
+-
+  hosts: centos
+  gather_facts: True
+  tasks:
+    - name: Test groupvars
+      debug:
+        msg: "{{ ansible_user }}"
+...
+
+
+---
+-
+  hosts: centos1
+  gather_facts: True
+  tasks:
+    - name: Test hostvars with an ansible fact and collect ansible_port, dot notation
+      debug:
+        msg: "{{ hostvars[ansible_hostname].ansible_port }}"
+
+    - name: Test groupvars
+      debug:
+        msg: "{{ ansible_user }}"
+...
+
+======groupvars======
+
+using extra varilable from file 
+ansible-playbook variables_playbook.yaml -e @extra_vars_file.yaml
+
+
+ansible centos1 -m setup -a 'filter=ansible_memfree_mb'
+
+ansible centos1 -m setup -a 'filter=ansible_mem*'
+
+ansible centos1 -m setup -a 'gather_subset=network'
+ansible centos1 -m setup -a 'gather_subset=!all,!min,network'
+
+===============Facts========================
+---
+-
+  hosts: all
+  tasks:
+    - name: Show IP Address
+      debug:
+        msg: "{{ ansible_default_ipv4.address }}"
+...
+
+Check localhost ansible facts stored in ansible machine {/etc/ansible/facts.d}
+
+cat /etc/ansible/facts.d/getdate1.fact 
+#!/bin/bash
+echo {\""date\"" : \""`date`\""}
+
+ cat /etc/ansible/facts.d/getdate2.fact 
+#!/bin/bash
+echo [date]
+echo date=`date`
+
+ansible ubuntu-c -m setup -a 'filter=ansible_local'
+cat playbook.yaml [As below mentioned file have hosts ALL, and facts are stored in only ansible machine so, it will run into ansible machine only and failed for rest of hosts.]
+---
+-
+  hosts: all
+  tasks:
+    - name: Show IP Address
+      debug:
+        msg: "{{ ansible_default_ipv4.address }}"
+
+    - name: Show Custom Fact 1
+      debug:
+        msg: "{{ ansible_local.getdate1.date }}"
+
+    - name: Show Custom Fact 2
+      debug:
+        msg: "{{ ansible_local.getdate2.date.date }}"
+...
+
+We can limit the playbook to be run only for specific host 
+ansible-playbook playbook.yaml -l ubuntu-c 
+
+
+---
+-
+  hosts: all
+  tasks:
+    - name: Show IP Address
+      debug:
+        msg: "{{ ansible_default_ipv4.address }}"
+
+    - name: Show Custom Fact 1
+      debug:
+        msg: "{{ ansible_local.getdate1.date }}"
+
+    - name: Show Custom Fact 2
+      debug:
+        msg: "{{ ansible_local.getdate2.date.date }}"
+
+    - name: Show Custom Fact 1 in hostvars
+      debug:
+        msg: "{{ hostvars[ansible_hostname].ansible_local.getdate1.date }}"
+
+    - name: Show Custom Fact 2 in hostvars
+      debug:
+        msg: "{{hostvars[ansible_hostname].ansible_local.getdate2.date.date }}"
+...
+
+Copy facts to remote machine and run
+
+cat playbook.yaml 
+---
+-
+  hosts: linux
+  tasks:
+
+    - name: Make Facts Dir
+      file:
+        path: /etc/ansible/facts.d
+        recurse: yes
+        state: directory
+
+    - name: Copy Fact 1
+      copy:
+        src: /etc/ansible/facts.d/getdate1.fact
+        dest: /etc/ansible/facts.d/getdate1.fact
+        mode: 0755
+
+    - name: Copy Fact 2
+      copy:
+        src: /etc/ansible/facts.d/getdate2.fact
+        dest: /etc/ansible/facts.d/getdate2.fact
+        mode: 0755
+
+    - name: Refresh Facts
+      setup:
+
+    - name: Show IP Address
+      debug:
+        msg: "{{ ansible_default_ipv4.address }}"
+
+    - name: Show Custom Fact 1
+      debug:
+        msg: "{{ ansible_local.getdate1.date }}"
+
+    - name: Show Custom Fact 2
+      debug:
+        msg: "{{ ansible_local.getdate2.date.date }}"
+
+    - name: Show Custom Fact 1 in hostvars
+      debug:
+        msg: "{{ hostvars[ansible_hostname].ansible_local.getdate1.date }}"
+
+    - name: Show Custom Fact 2 in hostvars
+      debug:
+        msg: "{{hostvars[ansible_hostname].ansible_local.getdate2.date.date }}"
+...
+
 ```
 Memory Commands
 ```
