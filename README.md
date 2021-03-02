@@ -1247,6 +1247,14 @@ Once done, Check open index.php, It will send email from SES to your receipt ema
 ```
 
 # Ansible 
+
+# The minus in YAML this indicates a list item.  
+# Hosts: where our play will run and options it will run with
+# Vars: variables that will apply to the play, on all target systems
+# Tasks: the list of tasks that will be executed within the play, this section can also be used for pre and post tasks
+# Handlers: the list of handlers that are executed as a notify key from a task
+# Roles: list of roles to be imported into the play
+
 ```
 ####Sample inventoryfile with private key
 [server]
