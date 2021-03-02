@@ -1247,7 +1247,7 @@ Once done, Check open index.php, It will send email from SES to your receipt ema
 ```
 
 # Ansible 
-
+```
 # The minus in YAML this indicates a list item.  
 # Hosts: where our play will run and options it will run with
 # Vars: variables that will apply to the play, on all target systems
@@ -1255,7 +1255,7 @@ Once done, Check open index.php, It will send email from SES to your receipt ema
 # Handlers: the list of handlers that are executed as a notify key from a task
 # Roles: list of roles to be imported into the play
 
-```
+
 ####Sample inventoryfile with private key
 [server]
 10.160.0.4 ansible_ssh_user=rakesh ansible_ssh_private_key_file=/home/rakesh/rakesh.pem
